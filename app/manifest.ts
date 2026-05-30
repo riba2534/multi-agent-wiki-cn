@@ -6,7 +6,7 @@ export const dynamic = 'force-static';
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: SITE_NAME,
-    short_name: '多智能体百科',
+    short_name: 'Multi-Agent Wiki',
     description: SITE_DESCRIPTION,
     start_url: '/',
     display: 'standalone',

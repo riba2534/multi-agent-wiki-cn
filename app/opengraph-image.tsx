@@ -39,16 +39,34 @@ export default function Image() {
               width: 44,
               height: 44,
               borderRadius: 10,
-              background: '#f4f4f5',
+              background: 'linear-gradient(135deg, #6d4aff, #b84dff)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
-            {/* Inline SVG star — avoids fetching a dynamic font for the ✦ glyph
-                (which 400s during build and isn't in the base sans-serif). */}
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="#ff7b39">
-              <path d="M12 0 L14.4 9.6 L24 12 L14.4 14.4 L12 24 L9.6 14.4 L0 12 L9.6 9.6 Z" />
+            {/* Hub-and-spoke network mark — matches the app logo (orchestration
+                / fan-out). Inline SVG so the OG image stays self-contained. */}
+            <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
+              <g stroke="#fff" strokeWidth="1.6" strokeLinecap="round" opacity="0.9">
+                <line x1="16" y1="16" x2="16" y2="6" />
+                <line x1="16" y1="16" x2="16" y2="26" />
+                <line x1="16" y1="16" x2="6" y2="16" />
+                <line x1="16" y1="16" x2="26" y2="16" />
+                <line x1="16" y1="16" x2="9" y2="9" />
+                <line x1="16" y1="16" x2="23" y2="9" />
+                <line x1="16" y1="16" x2="9" y2="23" />
+                <line x1="16" y1="16" x2="23" y2="23" />
+              </g>
+              <circle cx="16" cy="6" r="2" fill="#fff" />
+              <circle cx="16" cy="26" r="2" fill="#fff" />
+              <circle cx="6" cy="16" r="2" fill="#fff" />
+              <circle cx="26" cy="16" r="2" fill="#fff" />
+              <circle cx="9" cy="9" r="2" fill="#fff" />
+              <circle cx="23" cy="9" r="2" fill="#fff" />
+              <circle cx="9" cy="23" r="2" fill="#fff" />
+              <circle cx="23" cy="23" r="2" fill="#fff" />
+              <circle cx="16" cy="16" r="3.4" fill="#fff" />
             </svg>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>

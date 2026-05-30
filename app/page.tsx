@@ -53,14 +53,6 @@ export default function Home() {
         <footer className="mt-24 flex flex-wrap items-center justify-between gap-3 border-t border-border/60 pt-8 text-[12px] text-muted-foreground">
           <span>Multi-Agent Wiki — 多 Agent 模式工程知识库。</span>
           <div className="flex items-center gap-4">
-            <a
-              href="https://github.com/riba2534/multi-agent-wiki-cn"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium transition-colors hover:text-foreground"
-            >
-              GitHub ↗
-            </a>
             <a href="/llms.txt" className="font-medium transition-colors hover:text-foreground">
               llms.txt
             </a>

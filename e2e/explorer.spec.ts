@@ -124,7 +124,7 @@ test.describe('Multi-Agent Wiki', () => {
     const ogTitle = await page.locator('meta[property="og:title"]').first().getAttribute('content');
     const ogImage = await page.locator('meta[property="og:image"]').first().getAttribute('content');
     const twCard = await page.locator('meta[name="twitter:card"]').first().getAttribute('content');
-    expect(ogTitle).toContain('多智能体 Wiki');
+    expect(ogTitle).toContain('Multi-Agent Wiki');
     expect(ogImage).toMatch(/opengraph-image/);
     expect(twCard).toBe('summary_large_image');
   });

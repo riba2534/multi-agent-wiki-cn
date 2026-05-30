@@ -1,10 +1,10 @@
 'use client';
 import * as Dialog from '@radix-ui/react-dialog';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import Image from 'next/image';
 import { X } from 'lucide-react';
 import { useUI } from '@/components/providers/ui-provider';
 import { WikiSidebar } from '@/components/wiki/sidebar';
-import { LogoMark } from '@/components/logo';
 import type { NavItem } from '@/lib/wiki-nav';
 
 /**
@@ -51,13 +51,14 @@ export function MobileNav({ nav }: { nav: NavItem[] }) {
               >
                 <div className="flex h-14 shrink-0 items-center justify-between border-b border-sidebar-border px-4">
                   <Dialog.Title className="flex items-center gap-2 text-[14px] font-bold tracking-tight text-foreground">
-                    <span
-                      className="flex size-7 items-center justify-center rounded-lg text-white"
-                      style={{ background: 'var(--brand-gradient)' }}
-                    >
-                      <LogoMark size={15} style={{ color: '#fff' }} />
-                    </span>
-                    多智能体 Wiki
+                    <Image
+                      src="/logo.png"
+                      alt=""
+                      width={28}
+                      height={28}
+                      className="size-7 rounded-md shadow-sm"
+                    />
+                    Multi-Agent Wiki
                   </Dialog.Title>
                   <Dialog.Close
                     aria-label="关闭导航菜单"
