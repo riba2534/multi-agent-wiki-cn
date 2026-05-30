@@ -28,3 +28,4 @@ description: 多 Agent Wiki 引用的公开来源
 - **marl_ctde_intro**: <https://arxiv.org/abs/2409.03052>
 - **marl_survey**: <https://arxiv.org/abs/2405.06161v2/>
 - **organizational_paradigms**: <https://dl.acm.org/doi/abs/10.1017/s0269888905000317>
+- **bun_rust_pr**: <https://github.com/oven-sh/bun/pull/30412>（[Bun Zig→Rust 迁移案例](../workflows/bun-zig-to-rust-case)引用的主迁移 PR）

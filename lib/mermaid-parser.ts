@@ -55,6 +55,16 @@ interface ParsedNodeDecl extends ParsedNode {
   declared: boolean;
 }
 
+/** Normalize a node label: strip mermaid's optional wrapping double-quotes and
+ *  collapse `<br/>` line breaks (React Flow renders plain text, so a literal
+ *  tag would otherwise show through). */
+function cleanLabel(raw: string): string {
+  let s = raw.trim();
+  if (s.length >= 2 && s.startsWith('"') && s.endsWith('"')) s = s.slice(1, -1);
+  s = s.replace(/<br\s*\/?>/gi, ' ');
+  return s.trim();
+}
+
 function tryParseNode(token: string): ParsedNodeDecl | null {
   const idMatch = NODE_ID.exec(token);
   if (!idMatch) return null;
@@ -70,7 +80,7 @@ function tryParseNode(token: string): ParsedNodeDecl | null {
       rest.startsWith(open) &&
       rest.endsWith(close)
     ) {
-      const label = rest.slice(open.length, rest.length - close.length).trim();
+      const label = cleanLabel(rest.slice(open.length, rest.length - close.length));
       if (label.length === 0) continue;
       return { id, label, shape, declared: true };
     }

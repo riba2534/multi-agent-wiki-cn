@@ -38,3 +38,4 @@ description: 核心多 Agent 交互模式索引
 | 27 | [Coalition / Federation / Holonic](./coalition-federation-holonic) | 组织 | Agent 形成临时联盟、联邦或合弄——涉及治理、成员资格、自治边界。 |
 | 28 | [Social Simulation](./social-simulation) | 模拟 | 模拟人群、组织或社会，具备长期记忆、关系网络和涌现行为。 |
 | 29 | [MARL / CTDE](./marl-ctde) | 学习 | 多 Agent 强化学习；集中训练，分散执行。 |
+| 30 | [Dynamic Workflow / Code-Orchestrated Subagents](./dynamic-workflow-code-orchestration) | 工作流 | 一段脚本承载计划、循环、扇出与验证；子智能体执行实际工作，runtime 后台运行并可恢复。 |

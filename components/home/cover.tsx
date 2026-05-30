@@ -7,7 +7,7 @@ import { Constellation } from './constellation';
 
 /**
  * Full-bleed landing cover (the site's first screen). An "observatory" canvas
- * carries the 29-pattern constellation behind an oversized headline + dual CTA.
+ * carries the 30-pattern constellation behind an oversized headline + dual CTA.
  * Scrolling past it reveals the category switcher and the rest of the wiki.
  * The canvas follows the site's light/dark theme: `.cover-observatory` in
  * globals.css paints its gradient from theme design tokens (--background,
@@ -62,7 +62,7 @@ export function Cover({
             <span className="absolute inline-flex size-full animate-ping rounded-full bg-brand opacity-70" />
             <span className="relative inline-flex size-1.5 rounded-full bg-brand" />
           </span>
-          {patternCount} 模式 · 五维分类 · 生产级实现
+          {patternCount} 模式 · 工程维度分类 · 生产级实现
         </motion.span>
 
         <motion.h1
@@ -79,7 +79,7 @@ export function Cover({
           {...fade(0.16)}
           className="mt-6 max-w-[40rem] text-[15.5px] leading-relaxed text-muted-foreground"
         >
-          29 种交互模式、五维分类法与生产级实现。每种模式都回答四个问题：解决什么问题、控制结构如何、怎样落地、何时不该用。
+          {patternCount} 种交互模式、工程维度分类法与生产级实现。每种模式都回答四个问题：解决什么问题、控制结构如何、怎样落地、何时不该用。
         </motion.p>
 
         <motion.div {...fade(0.24)} className="mt-9 flex flex-wrap items-center justify-center gap-3">

@@ -27,7 +27,11 @@ description: 多 Agent 常用术语
 | 检查点（Checkpoint） | 持久化的工作流状态快照，用于任务恢复和重放 |
 | 护栏（Guardrails） | 限制 Agent 行为的安全策略机制——包括输入检查、工具限制、输出审查、预算控制 |
 | 产出物（Artifact） | Agent 执行过程中产生的文件、代码、文档等结果 |
-| 预算（Budget） | 对 Agent 执行的成本、token 数量或调用次数的上限约束 |
+| 预算（Budget） | 对 Agent 执行的成本、token 数量或调用次数的上限约束；动态工作流中 `budget.total` 是硬上限，`spent()` 触顶后再调 `agent()` 会抛错 |
+| 动态工作流（Dynamic Workflow） | Claude Code 的代码编排能力（研究预览）：Claude 写一段 JS 脚本，runtime 后台执行并扇出子智能体；计划是显式脚本产物，可恢复、可保存复用 |
+| 编排原语（Orchestration Primitives） | 动态工作流脚本的全局构件：`agent()` / `parallel()` / `pipeline()` / `phase()` / `log()` / `budget` / `workflow()`（是全局函数，不是 `ctx.` 上的方法） |
+| 屏障 vs 流式（Barrier vs Stream） | `parallel()` 是屏障——等批次内全部完成才继续；`pipeline()` 是流式——每项独立流经各阶段、阶段间无屏障 |
+| 恢复 / 重放（Resume） | 动态工作流用 `resumeFromRunId` 重放：最长未改动前缀的 `agent()` 调用命中缓存；持久化由 runtime 自动 journaling 完成，无需手动 checkpoint 原语 |
 | 流水线（Pipeline） | 按固定顺序串联的处理阶段 |
 | 扇出/汇聚（Fan-out / Gather） | 将任务并行分发到多个 Agent，再汇聚结果 |
 | 群体智能（Swarm） | 去中心化的同构 Agent 协作模式 |

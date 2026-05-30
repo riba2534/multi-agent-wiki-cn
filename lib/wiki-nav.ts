@@ -66,6 +66,17 @@ export function getNav(): NavItem[] {
     },
     {
       type: 'category',
+      label: 'Workflows',
+      href: '/workflows',
+      items: [
+        leaf('workflows/orchestration-primitives'),
+        leaf('workflows/parallel-vs-pipeline'),
+        leaf('workflows/governance-permission-cost'),
+        leaf('workflows/bun-zig-to-rust-case'),
+      ],
+    },
+    {
+      type: 'category',
       label: 'Implementation',
       items: [
         leaf('implementation/production-runtime'),

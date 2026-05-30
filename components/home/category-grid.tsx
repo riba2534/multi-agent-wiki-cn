@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Network, Share2, Scale, Boxes, Cable, Sparkles, type LucideIcon } from 'lucide-react';
+import { Network, Workflow, Share2, Scale, Boxes, Cable, Sparkles, type LucideIcon } from 'lucide-react';
 import { CATEGORY_HEX, type PatternCategory } from '@/lib/pattern-map';
 
 export interface HomeCategory {
@@ -13,6 +13,7 @@ export interface HomeCategory {
 /** Chinese name + one-line description + icon for each taxonomy dimension. */
 const META: Record<PatternCategory, { zh: string; desc: string; Icon: LucideIcon }> = {
   Control:     { zh: '控制结构', desc: '谁掌握控制权、如何路由与分解任务', Icon: Network },
+  Workflow:    { zh: '工作流',   desc: '把计划固化为脚本，编排子智能体扇出执行', Icon: Workflow },
   Information: { zh: '信息流',   desc: 'Agent 之间如何传递上下文与中间结果', Icon: Share2 },
   Decision:    { zh: '决策',     desc: '如何在多个候选输出间收敛出结论', Icon: Scale },
   Environment: { zh: '执行环境', desc: 'Agent 与环境、人、沙箱如何交互', Icon: Boxes },
@@ -26,10 +27,10 @@ export function CategoryGrid({ categories }: { categories: HomeCategory[] }) {
     <section className="mt-24">
       <div className="mb-8 flex flex-col gap-2">
         <span className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
-          五维分类法
+          工程维度分类法
         </span>
         <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-[1.75rem]">
-          按工程维度组织的 29 种模式
+          按工程维度组织的 30 种模式
         </h2>
       </div>
 

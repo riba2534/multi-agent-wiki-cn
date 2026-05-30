@@ -14,8 +14,9 @@ export default function NotFound() {
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           {[
             { href: '/', label: '首页', sub: '概览与推荐路径' },
-            { href: '/patterns', label: '模式', sub: '29 种多智能体模式' },
-            { href: '/taxonomy', label: '分类', sub: '五维视角' },
+            { href: '/patterns', label: '模式', sub: '30 种多智能体模式' },
+            { href: '/workflows', label: '工作流', sub: '动态工作流编排' },
+            { href: '/taxonomy', label: '分类', sub: '工程维度视角' },
             { href: '/decision-matrix', label: '决策矩阵', sub: '按任务选择' },
           ].map(it => (
             <Link

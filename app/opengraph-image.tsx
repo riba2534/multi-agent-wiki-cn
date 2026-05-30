@@ -86,7 +86,7 @@ export default function Image() {
 
         {/* Footer chips */}
         <div style={{ display: 'flex', gap: 12, marginTop: 40 }}>
-          {['29 patterns', '6 runtime guides', 'glossary', 'live diagrams'].map(t => (
+          {['30 patterns', '6 runtime guides', 'glossary', 'live diagrams'].map(t => (
             <div
               key={t}
               style={{

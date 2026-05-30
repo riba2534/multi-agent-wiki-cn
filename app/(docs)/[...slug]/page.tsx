@@ -48,6 +48,7 @@ export async function generateMetadata({ params }: Props) {
 
 const SECTION_LABELS: Record<string, string> = {
   patterns: 'Patterns',
+  workflows: 'Workflows',
   implementation: 'Implementation',
   reference: 'Reference',
 };

@@ -17,6 +17,7 @@ description: 多 Agent 交互模式、分类法和工程实现的系统性参考
 - 新来的 → 从[分类法](taxonomy)开始
 - 选择设计方案 → 跳转到[决策矩阵](decision-matrix)
 - 搭建平台 → 阅读[生产运行时架构](implementation/production-runtime)
+- 大规模编排 → 了解[动态工作流](workflows)（代码编排子智能体）
 - 添加新模式 → 使用[模式页面模板](implementation/pattern-page-template)
 - 查阅术语 → 参考[术语表](reference/glossary)
 
@@ -29,6 +30,7 @@ description: 多 Agent 交互模式、分类法和工程实现的系统性参考
 ```mermaid
 flowchart TD
   A["多 Agent Wiki"] --> B["控制结构"]
+  A --> W["工作流"]
   A --> C["信息流"]
   A --> D["决策"]
   A --> E["执行环境"]
@@ -42,6 +44,8 @@ flowchart TD
   B --> B5["点对点 / 群集"]
   B --> B6["图 / 状态机 / 工作流"]
   B --> B7["协调器 / 调度器"]
+
+  W --> W1["动态工作流 / 代码编排子智能体"]
 
   C --> C1["顺序管道"]
   C --> C2["并行扇出 / 汇聚"]

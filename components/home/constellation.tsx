@@ -2,8 +2,8 @@ import { PATTERN_CATEGORIES, CATEGORY_HEX, type PatternCategory } from '@/lib/pa
 import { cn } from '@/lib/utils';
 
 /**
- * The cover's hero visual: a 29-pattern "constellation". Every pattern is a
- * glowing star, grouped into six clusters (one per taxonomy dimension). Stars
+ * The cover's hero visual: a 30-pattern "constellation". Every pattern is a
+ * glowing star, grouped into seven clusters (one per taxonomy dimension). Stars
  * breathe and the links between clusters pulse with flowing light — a pure
  * SVG + CSS ambience (no RAF engine), so it server-renders and degrades to a
  * static map under `prefers-reduced-motion` via the global CSS fallback.
@@ -14,6 +14,7 @@ import { cn } from '@/lib/utils';
 
 const CLUSTER: Record<PatternCategory, { cx: number; cy: number; zh: string }> = {
   Control:     { cx: 330, cy: 250, zh: '控制结构' },
+  Workflow:    { cx: 512, cy: 110, zh: '工作流' },
   Information: { cx: 648, cy: 238, zh: '信息流' },
   Decision:    { cx: 912, cy: 268, zh: '决策' },
   Environment: { cx: 820, cy: 556, zh: '执行环境' },
@@ -21,11 +22,12 @@ const CLUSTER: Record<PatternCategory, { cx: number; cy: number; zh: string }> =
   Specialized: { cx: 178, cy: 470, zh: '专项模式' },
 };
 
-/** Inter-cluster links: an outer ring + three diagonals → a networked star map. */
+/** Inter-cluster links: an outer ring + diagonals → a networked star map. */
 const CLUSTER_LINKS: [PatternCategory, PatternCategory][] = [
   ['Control', 'Information'], ['Information', 'Decision'], ['Decision', 'Environment'],
   ['Environment', 'Protocol'], ['Protocol', 'Specialized'], ['Specialized', 'Control'],
   ['Control', 'Environment'], ['Information', 'Protocol'], ['Decision', 'Specialized'],
+  ['Control', 'Workflow'], ['Workflow', 'Information'],
 ];
 
 const GOLDEN = 2.399963229728653;
