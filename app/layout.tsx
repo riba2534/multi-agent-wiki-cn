@@ -21,8 +21,8 @@ export const metadata: Metadata = {
     '多智能体', '智能体', '大语言模型', '编排', '监督者', '交接',
     '多智能体系统', '智能体模式', 'AI工程', 'MCP', 'A2A',
   ],
-  authors: [{ name: 'fuergaosi233', url: 'https://github.com/fuergaosi233' }],
-  creator: 'fuergaosi233',
+  authors: [{ name: 'riba2534', url: 'https://github.com/riba2534' }],
+  creator: 'riba2534',
   openGraph: {
     type: 'website',
     siteName: SITE_NAME,
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: SITE_NAME,
     description: SITE_DESCRIPTION,
-    creator: '@fuergaosi233',
+    creator: '@riba2534',
   },
   robots: { index: true, follow: true },
   alternates: {

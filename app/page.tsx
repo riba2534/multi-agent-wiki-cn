@@ -54,7 +54,7 @@ export default function Home() {
           <span>Multi-Agent Wiki — 多 Agent 模式工程知识库。</span>
           <div className="flex items-center gap-4">
             <a
-              href="https://github.com/fuergaosi233/multiagent-explorer"
+              href="https://github.com/riba2534/multi-agent-wiki-cn"
               target="_blank"
               rel="noopener noreferrer"
               className="font-medium transition-colors hover:text-foreground"

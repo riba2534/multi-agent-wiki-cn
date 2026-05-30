@@ -124,7 +124,7 @@ export function WikiShell({
             <span>Multi-Agent Wiki — 工程知识库。</span>
             {editPath && (
               <a
-                href={`https://github.com/fuergaosi233/multiagent-explorer/edit/main/${editPath}`}
+                href={`https://github.com/riba2534/multi-agent-wiki-cn/edit/main/${editPath}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-medium text-muted-foreground transition-colors hover:text-foreground"

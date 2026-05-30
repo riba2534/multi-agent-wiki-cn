@@ -39,7 +39,7 @@ export async function GET() {
   out.push('');
   out.push('## Source');
   out.push('');
-  out.push('- [GitHub](https://github.com/fuergaosi233/multiagent-explorer)');
+  out.push('- [GitHub](https://github.com/riba2534/multi-agent-wiki-cn)');
   out.push('');
 
   return new Response(out.join('\n'), {
