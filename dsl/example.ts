@@ -319,7 +319,6 @@ export function runDslExamples(): void {
     if (!p.id || !p.title || p.nodes.length === 0 || p.timeline.length === 0) {
       throw new Error(`Pattern "${p.id}" looks malformed after build().`);
     }
-    // eslint-disable-next-line no-console
     console.log(
       `[dsl] built "${p.id}" — ${p.nodes.length} nodes, ${
         Object.keys(p.edges).length

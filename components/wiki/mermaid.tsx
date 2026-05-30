@@ -3,6 +3,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { useTheme } from 'next-themes';
 import { Maximize2 } from 'lucide-react';
 import { MermaidModal } from './mermaid-modal';
+import { cn } from '@/lib/utils';
 
 interface Props { chart: string }
 
@@ -30,6 +31,10 @@ export function Mermaid({ chart }: Props) {
         const { svg } = await mermaid.render(id, chart);
         if (cancelled) return;
         if (ref.current) ref.current.innerHTML = svg;
+        // Recover from any prior failure: a successful re-render (e.g. after a
+        // theme toggle or chart edit) clears the wedged error state. Runs in an
+        // async continuation, so it is not a synchronous set-state-in-effect.
+        setErr(null);
       } catch (e) {
         if (cancelled) return;
         setErr(String(e instanceof Error ? e.message : e));
@@ -39,17 +44,19 @@ export function Mermaid({ chart }: Props) {
     return () => { cancelled = true; };
   }, [chart, resolvedTheme, id]);
 
-  if (err) {
-    return (
-      <div className="my-4 rounded-xl border border-destructive/30 bg-gradient-to-br from-destructive/10 to-destructive/5 p-3 font-mono text-xs text-destructive shadow-sm">
-        Mermaid 渲染错误：{err}
-      </div>
-    );
-  }
-
   return (
     <>
-      <div className="group relative my-4 overflow-x-auto rounded-2xl border border-border/40 bg-gradient-to-br from-muted/20 via-background to-muted/10 p-4 shadow-lg shadow-brand/5 ring-1 ring-inset ring-white/5 dark:ring-white/[0.02] [&_svg]:mx-auto [&_svg]:max-w-full">
+      {err && (
+        <div className="my-4 rounded-xl border border-destructive/30 bg-gradient-to-br from-destructive/10 to-destructive/5 p-3 font-mono text-xs text-destructive shadow-sm">
+          Mermaid 渲染错误：{err}
+        </div>
+      )}
+      {/* Keep the render target mounted even while showing an error, so a later
+          successful re-render can write the SVG into it (ref stays valid). */}
+      <div className={cn(
+        'group relative my-4 overflow-x-auto rounded-2xl border border-border/40 bg-gradient-to-br from-muted/20 via-background to-muted/10 p-4 shadow-lg shadow-brand/5 ring-1 ring-inset ring-white/5 dark:ring-white/[0.02] [&_svg]:mx-auto [&_svg]:max-w-full',
+        err && 'hidden',
+      )}>
         <div ref={ref} />
         <button
           type="button"

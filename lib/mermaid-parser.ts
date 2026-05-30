@@ -37,27 +37,43 @@ export interface ParsedFlow {
   edges: ParsedEdge[];
 }
 
-// id[Label] / id(Label) / id((Label)) / id[(Label)] / id{Label}
-const NODE_DECL = /^([A-Za-z_][\w-]*)(\[\(|\[|\(\(|\(|\{)([^)\]}]+)(\)\]|\]|\)\)|\)|\})$/;
-// id (bare reference)
-const NODE_REF = /^([A-Za-z_][\w-]*)$/;
+// Leading `id` of a node token.
+const NODE_ID = /^([A-Za-z_][\w-]*)/;
+// Bracket pairs, longest-open-first so `[(` beats `[` and `((` beats `(`.
+const SHAPE_BRACKETS: { open: string; close: string; shape: NodeShape }[] = [
+  { open: '[(', close: ')]', shape: 'cylinder' },
+  { open: '((', close: '))', shape: 'circle' },
+  { open: '[', close: ']', shape: 'rect' },
+  { open: '(', close: ')', shape: 'round' },
+  { open: '{', close: '}', shape: 'diamond' },
+];
 
-function parseShape(open: string): NodeShape {
-  if (open === '[(') return 'cylinder';
-  if (open === '((') return 'circle';
-  if (open === '(') return 'round';
-  if (open === '{') return 'diamond';
-  return 'rect';
+/** Parsed node plus whether it came from a real `id[...]` declaration (vs a
+ *  bare `id` reference). `declared` lets a later declaration replace a bare
+ *  ref without a fragile label===id heuristic. */
+interface ParsedNodeDecl extends ParsedNode {
+  declared: boolean;
 }
 
-function tryParseNode(token: string): ParsedNode | null {
-  const m = NODE_DECL.exec(token);
-  if (m) {
-    return { id: m[1], label: m[3].trim(), shape: parseShape(m[2]) };
-  }
-  const ref = NODE_REF.exec(token);
-  if (ref) {
-    return { id: ref[1], label: ref[1], shape: 'rect' };
+function tryParseNode(token: string): ParsedNodeDecl | null {
+  const idMatch = NODE_ID.exec(token);
+  if (!idMatch) return null;
+  const id = idMatch[1];
+  const rest = token.slice(id.length);
+  // Bare reference: just the id, no brackets.
+  if (rest === '') return { id, label: id, shape: 'rect', declared: false };
+  // Match the bracket pair by exact open prefix + close suffix, so labels are
+  // free to contain `(`/`)` (e.g. `BB[(Blackboard (shared))]`).
+  for (const { open, close, shape } of SHAPE_BRACKETS) {
+    if (
+      rest.length >= open.length + close.length &&
+      rest.startsWith(open) &&
+      rest.endsWith(close)
+    ) {
+      const label = rest.slice(open.length, rest.length - close.length).trim();
+      if (label.length === 0) continue;
+      return { id, label, shape, declared: true };
+    }
   }
   return null;
 }
@@ -67,8 +83,9 @@ function splitOnConnector(
   line: string,
 ): { left: string; conn: string; label?: string; right: string } | null {
   // Iterate so brackets aren't split across.
-  // Connectors: `-.->`, `-->`, `---`, `-.-`
-  const re = /\s*(-{2,3}>|-\.+>|-{2,3}|-\.+-)\s*/g;
+  // Connectors: `<-->`/`<-.->` (bidirectional), `-.->`, `-->`, `---`, `-.-`.
+  // Bidirectional forms are listed first so `<-->` wins over `-->`.
+  const re = /\s*(<-{2,3}>|<-\.+>|-{2,3}>|-\.+>|-{2,3}|-\.+-)\s*/g;
   let depth = 0;
   for (let i = 0; i < line.length; i++) {
     const c = line[i];
@@ -122,15 +139,17 @@ export function parseFlowchart(source: string): ParsedFlow | null {
     startIdx = 1;
   }
 
-  const nodes = new Map<string, ParsedNode>();
+  const nodes = new Map<string, ParsedNodeDecl>();
   const edges: ParsedEdge[] = [];
 
   function recordNode(token: string): string | null {
     const n = tryParseNode(token);
     if (!n) return null;
-    // First declaration wins for label/shape; bare refs don't overwrite a real declaration.
+    // First real declaration wins for label/shape; a real `id[...]` declaration
+    // replaces a prior bare `id` reference, but bare refs never overwrite a
+    // declaration — even one whose author chose a label equal to its id.
     const existing = nodes.get(n.id);
-    if (!existing || existing.label === existing.id) {
+    if (!existing || (!existing.declared && n.declared)) {
       nodes.set(n.id, n);
     }
     return n.id;

@@ -130,8 +130,9 @@ function NavCategory({
   items: (NavLeaf | NavGroupLabel)[];
 }) {
   const pathname = usePathname();
-  const hasActive = items.some(i => i.type === 'doc' && i.href === pathname);
-  const [open, setOpen] = useState<boolean>(hasActive || true);
+  // Sections start expanded — this is a small wiki and collapsing them would
+  // hide navigation for the sibling sections while reading a page.
+  const [open, setOpen] = useState<boolean>(true);
   const docCount = items.filter(i => i.type === 'doc').length;
   const labelActive = href && pathname === href;
 

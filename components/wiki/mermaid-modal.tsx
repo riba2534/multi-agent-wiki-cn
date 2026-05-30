@@ -5,6 +5,7 @@ import { useTheme } from 'next-themes';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Maximize, Minus, Plus, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useMounted } from '@/hooks/useMounted';
 
 interface Props {
   chart: string;
@@ -26,9 +27,10 @@ export function MermaidModal({ chart, open, onClose }: Props) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const [transform, setTransform] = useState({ scale: 1, x: 0, y: 0 });
   const dragRef = useRef<{ startX: number; startY: number; baseX: number; baseY: number } | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
+  // `dragging` drives the grab cursor and disables the pan transition — it must
+  // be state (not a ref read during render) so the UI actually updates on drag.
+  const [dragging, setDragging] = useState(false);
+  const mounted = useMounted();
 
   // Render the mermaid SVG once per open + theme change.
   useEffect(() => {
@@ -87,7 +89,9 @@ export function MermaidModal({ chart, open, onClose }: Props) {
     });
   }, []);
 
-  // Reset transform when the chart or open state changes.
+  // Reset the (user-mutable) pan/zoom transform when the modal opens or the
+  // chart changes — a legitimate "resync state to a prop change" effect.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { if (open) reset(); }, [chart, open, reset]);
 
   // Keyboard + scroll-lock when open.
@@ -127,13 +131,14 @@ export function MermaidModal({ chart, open, onClose }: Props) {
     if (e.button !== 0) return;
     (e.target as Element).setPointerCapture(e.pointerId);
     dragRef.current = { startX: e.clientX, startY: e.clientY, baseX: transform.x, baseY: transform.y };
+    setDragging(true);
   }
   function onPointerMove(e: React.PointerEvent<HTMLDivElement>) {
     if (!dragRef.current) return;
     const { startX, startY, baseX, baseY } = dragRef.current;
     setTransform(prev => ({ ...prev, x: baseX + (e.clientX - startX), y: baseY + (e.clientY - startY) }));
   }
-  function onPointerUp() { dragRef.current = null; }
+  function onPointerUp() { dragRef.current = null; setDragging(false); }
 
   if (!mounted) return null;
 
@@ -170,7 +175,7 @@ export function MermaidModal({ chart, open, onClose }: Props) {
             ref={viewportRef}
             className={cn(
               'relative flex-1 overflow-hidden select-none',
-              dragRef.current ? 'cursor-grabbing' : 'cursor-grab',
+              dragging ? 'cursor-grabbing' : 'cursor-grab',
             )}
             onClick={e => e.stopPropagation()}
             onPointerDown={onPointerDown}
@@ -183,7 +188,7 @@ export function MermaidModal({ chart, open, onClose }: Props) {
               style={{
                 transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.scale})`,
                 transformOrigin: '0 0',
-                transition: dragRef.current ? 'none' : 'transform 120ms ease-out',
+                transition: dragging ? 'none' : 'transform 120ms ease-out',
                 willChange: 'transform',
               }}
             >

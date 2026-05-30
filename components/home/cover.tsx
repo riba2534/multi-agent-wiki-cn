@@ -6,13 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Constellation } from './constellation';
 
 /**
- * Full-bleed landing cover (the site's first screen). A deep "observatory"
- * canvas — fixed dark regardless of the site theme, as is conventional for a
- * landing hero — carries the 29-pattern constellation behind an oversized
- * headline + dual CTA. Scrolling past it reveals the category switcher and the
- * rest of the wiki. The dark scope is achieved by overriding the design tokens
- * locally (see `.cover-observatory` in globals.css), so every token-driven
- * child (buttons, badge) adapts to the dark ground automatically.
+ * Full-bleed landing cover (the site's first screen). An "observatory" canvas
+ * carries the 29-pattern constellation behind an oversized headline + dual CTA.
+ * Scrolling past it reveals the category switcher and the rest of the wiki.
+ * The canvas follows the site's light/dark theme: `.cover-observatory` in
+ * globals.css paints its gradient from theme design tokens (--background,
+ * --muted, --brand), so the hero and every token-driven child adapt together.
  */
 export function Cover({
   patternCount,

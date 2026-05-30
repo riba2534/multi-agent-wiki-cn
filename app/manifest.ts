@@ -10,8 +10,10 @@ export default function manifest(): MetadataRoute.Manifest {
     description: SITE_DESCRIPTION,
     start_url: '/',
     display: 'standalone',
-    background_color: '#1a1d23',
-    theme_color: '#1a1d23',
+    // Match the dark themeColor declared in app/layout.tsx's viewport so the
+    // installed PWA chrome/splash is consistent with the site.
+    background_color: '#1a1625',
+    theme_color: '#1a1625',
     icons: [{ src: '/icon.svg', sizes: 'any', type: 'image/svg+xml' }],
   };
 }

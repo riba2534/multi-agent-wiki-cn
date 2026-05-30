@@ -15,16 +15,13 @@ Agent 之间不直接通信。它们修改环境并留下痕迹；其他 Agent �
 
 ```mermaid
 flowchart LR
-  A[Agent A] --> E["(环境 / 工作区)"]
+  A[Agent A] --> E[(环境 / 工作区)]
   B[Agent B] --> E
   C[Agent C] --> E
   E --> A
   E --> B
   E --> C
   E --> R["涌现式协调（结果）"]
-  R --> A
-  R --> B
-  R --> C
 ```
 
 ## 适用场景

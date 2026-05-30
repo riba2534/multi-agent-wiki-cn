@@ -3,7 +3,7 @@ title: MARL / CTDE (多 Agent 强化学习)
 description: 多 Agent 强化学习，采用集中训练、分散执行范式。
 ---
 
-# MARL / CTDE
+# MARL / CTDE (多 Agent 强化学习)
 
 ## 定义
 

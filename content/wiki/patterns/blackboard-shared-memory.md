@@ -15,7 +15,7 @@ description: Agent 通过共享状态、知识库、任务板或工作区间接�
 
 ```mermaid
 flowchart TD
-  BB["(黑板)"]
+  BB[(黑板)]
   A["研究 Agent"] --> BB
   B["代码 Agent"] --> BB
   C["测试 Agent"] --> BB

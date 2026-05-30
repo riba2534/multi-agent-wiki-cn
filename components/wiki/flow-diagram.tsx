@@ -17,8 +17,9 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { Maximize2, X } from 'lucide-react';
-import { parseFlowchart, type FlowDirection, type ParsedFlow, type NodeShape } from '@/lib/mermaid-parser';
+import { parseFlowchart, type ParsedFlow, type NodeShape } from '@/lib/mermaid-parser';
 import { cn } from '@/lib/utils';
+import { useMounted } from '@/hooks/useMounted';
 
 interface Props {
   /** Raw mermaid source. The component falls back to its `fallback` prop if
@@ -127,14 +128,14 @@ function layout(flow: ParsedFlow): { nodes: Node[]; edges: Edge[] } {
     label: e.label,
     animated: !e.noArrow,
     style: {
-      stroke: 'hsl(var(--brand))',
+      stroke: 'var(--brand)',
       strokeWidth: 1.5,
       strokeDasharray: e.dashed ? '6 4' : undefined,
     },
-    labelStyle: { fontSize: 10, fill: 'hsl(var(--muted-foreground))', fontFamily: 'var(--font-mono)' },
-    labelBgStyle: { fill: 'hsl(var(--background))', fillOpacity: 0.85 },
+    labelStyle: { fontSize: 10, fill: 'var(--muted-foreground)', fontFamily: 'var(--font-mono)' },
+    labelBgStyle: { fill: 'var(--background)', fillOpacity: 0.85 },
     type: 'smoothstep',
-    markerEnd: e.noArrow ? undefined : { type: MarkerType.ArrowClosed, color: 'hsl(var(--brand))' },
+    markerEnd: e.noArrow ? undefined : { type: MarkerType.ArrowClosed, color: 'var(--brand)' },
   }));
 
   return { nodes, edges };
@@ -150,8 +151,8 @@ function Inner({ flow, height = 480 }: { flow: ParsedFlow; height?: number }) {
       style={{
         // React Flow uses CSS vars for its palette — keep them in sync with
         // our theme so the controls/background/handles look native.
-        ['--xy-edge-stroke' as string]: 'hsl(var(--brand))',
-        ['--xy-edge-stroke-selected' as string]: 'hsl(var(--brand))',
+        ['--xy-edge-stroke' as string]: 'var(--brand)',
+        ['--xy-edge-stroke-selected' as string]: 'var(--brand)',
       }}
     >
       <ReactFlow
@@ -186,9 +187,8 @@ export function FlowDiagram({ chart, fallback, height = 480 }: Props) {
   // React Flow measures the DOM and renders non-deterministically, so it can't
   // be server-rendered without a hydration mismatch. Render a stable skeleton
   // for SSR + the first client paint, then mount the live diagram.
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const containerRef = useRef<HTMLDivElement>(null);
-  useEffect(() => setMounted(true), []);
 
   if (!flow) return fallback ?? null;
 

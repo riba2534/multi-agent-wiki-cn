@@ -27,17 +27,29 @@ export function useAnimationEngine(pattern: Pattern | null) {
   const [caption, setCaption] = useState('');
 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // The edge fade-out timer (set inside applyStep) and the restart/variant
+  // "kick" timer both need to be cancellable on pause/seek/unmount — otherwise
+  // a pending callback fires after a seek and overwrites the freshly-set state.
+  const fireTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const kickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const playingRef = useRef(false);
   const stepRef = useRef(0);
   const speedRef = useRef(1);
   const patternRef = useRef<Pattern | null>(null);
   const variantIdxRef = useRef(0);
 
+  // Mirror the latest committed state/props into refs so the imperative
+  // timers and transport callbacks below always read current values without
+  // re-creating themselves. This is a deliberate render-phase sync; every
+  // consumer runs post-commit (event handlers / setTimeout), so it is safe.
+  // The React-Compiler `refs` rule doesn't model this pattern.
+  /* eslint-disable react-hooks/refs */
   playingRef.current = playing;
   stepRef.current = step;
   speedRef.current = speed;
   patternRef.current = pattern;
   variantIdxRef.current = variantIdx;
+  /* eslint-enable react-hooks/refs */
 
   const getTimeline = useCallback((p: Pattern, vIdx: number): TimelineStep[] => {
     if (p.variants && p.variants[vIdx]?.timeline) {
@@ -50,6 +62,14 @@ export function useAnimationEngine(pattern: Pattern | null) {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
       timerRef.current = null;
+    }
+    if (fireTimerRef.current) {
+      clearTimeout(fireTimerRef.current);
+      fireTimerRef.current = null;
+    }
+    if (kickTimerRef.current) {
+      clearTimeout(kickTimerRef.current);
+      kickTimerRef.current = null;
     }
   }, []);
 
@@ -70,7 +90,9 @@ export function useAnimationEngine(pattern: Pattern | null) {
     const baseDur = s.duration || 1500;
     const dur = baseDur / speedRef.current;
     const edgeIds = Array.from(firingMap.keys());
-    setTimeout(() => {
+    if (fireTimerRef.current) clearTimeout(fireTimerRef.current);
+    fireTimerRef.current = setTimeout(() => {
+      fireTimerRef.current = null;
       setFiringEdges(new Map());
       setDoneEdges(prev => {
         const next = new Set(prev);
@@ -96,7 +118,10 @@ export function useAnimationEngine(pattern: Pattern | null) {
       }
       stepRef.current = nextStep;
       setStep(nextStep);
-      const newDur = applyStep(tl, nextStep);
+      applyStep(tl, nextStep);
+      // Self-schedules the following step. The recursive reference resolves at
+      // call time (inside setTimeout), after `scheduleNext` is defined.
+      // eslint-disable-next-line react-hooks/immutability
       scheduleNext(tl, nextStep);
     }, dur);
   }, [applyStep]);
@@ -145,7 +170,7 @@ export function useAnimationEngine(pattern: Pattern | null) {
     stepRef.current = 0;
     setDoneEdges(new Set());
     setFiringEdges(new Map());
-    setTimeout(() => play(), 50);
+    kickTimerRef.current = setTimeout(() => { kickTimerRef.current = null; play(); }, 50);
   }, [pause, play]);
 
   const nextStep = useCallback(() => gotoStep(stepRef.current + 1), [gotoStep]);
@@ -159,10 +184,13 @@ export function useAnimationEngine(pattern: Pattern | null) {
     stepRef.current = 0;
     setDoneEdges(new Set());
     setFiringEdges(new Map());
-    setTimeout(() => play(), 50);
+    kickTimerRef.current = setTimeout(() => { kickTimerRef.current = null; play(); }, 50);
   }, [pause, play]);
 
-  // When pattern changes — reset and auto-play
+  // When pattern changes — reset all derived state to step 0 and auto-play.
+  // This is the canonical "reset state when a key prop changes" effect; the
+  // synchronous setState calls are intentional (they re-key the whole widget).
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (!pattern) return;
     clearTimer();
@@ -199,6 +227,7 @@ export function useAnimationEngine(pattern: Pattern | null) {
     return () => clearTimeout(t);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pattern?.id]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   useEffect(() => {
     return () => clearTimer();

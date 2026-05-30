@@ -92,7 +92,9 @@ export default async function WikiPage({ params }: Props) {
   }
 
   const headings = extractHeadings(content);
-  const editPath = `content/wiki/${slug.join('/')}.md`;
+  // Use the actually-resolved source path so index-backed routes (e.g.
+  // /patterns → content/wiki/patterns/index.md) get a correct edit link.
+  const editPath = doc.relPath;
 
   return (
     <WikiShell

@@ -67,7 +67,7 @@ export function patternToMarkdown(p: Pattern): string {
   });
   out.push('');
 
-  if (p.variants && p.variants.length > 1) {
+  if (p.variants && p.variants.length >= 1) {
     out.push('### Variants');
     for (const v of p.variants) {
       out.push('');

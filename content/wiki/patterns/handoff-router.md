@@ -89,5 +89,5 @@ async function maybeHandoff(state: SessionState) {
 
 ## 参考资料
 
-- [OpenAI 交接](https://openai.github.io/openai-Agent-python/handoffs/)
+- [OpenAI 交接](https://openai.github.io/openai-agents-python/handoffs/)
 - [LangChain 交接](https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs)

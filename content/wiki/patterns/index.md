@@ -26,7 +26,7 @@ description: 核心多 Agent 交互模式索引
 | 15 | [Event Bus / Pub-Sub](./event-bus-pubsub) | 信息 | Agent 通过事件、主题或队列异步通信——而非直接调用。 |
 | 16 | [Market / Auction / Contract Net](./market-auction-contract-net) | 决策 | 通过竞标、定价或合同网协议分配任务和资源。 |
 | 17 | [Peer-to-peer / Swarm](./peer-swarm) | 控制 | 没有固定中心；Agent 通过直接消息、共享环境或动态交接自组织。 |
-| 18 | [Mixture-of-Agents](./mixture-of-Agent) | 决策 | 分层集成——每层读取上一层的多个输出并加以改进。 |
+| 18 | [Mixture-of-Agents](./mixture-of-agents) | 决策 | 分层集成——每层读取上一层的多个输出并加以改进。 |
 | 19 | [Human-in-the-loop](./human-in-the-loop) | 环境 | 人类作为特殊 Agent 参与审批、纠正、路由、中断或最终决策。 |
 | 20 | [Protocol-mediated Network](./protocol-mediated) | 协议 | 通过 MCP、A2A、ACP、Agent Client Protocol 连接工具、Agent 、客户端和平台。 |
 | 21 | [Clarification-at-edge](./clarification-at-edge) | 决策 | 在 Agent 之间交接边界或不确定操作前插入澄清步骤。 |

@@ -56,10 +56,10 @@ async function outerReply(message) {
 
 ## 推荐的追踪事件
 
-- `nested.chat.started`
-- `nested.chat.turn`
-- `nested.chat.completed`
-- `nested.chat.summary.returned`
+- `nested_chat.started`
+- `nested_chat.turn`
+- `nested_chat.completed`
+- `nested_chat.summary.returned`
 
 ## 常见失败模式
 

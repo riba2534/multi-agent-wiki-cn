@@ -1,5 +1,4 @@
 'use client';
-import { useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { PATTERNS } from '@/data/patterns';
 import { useAnimationEngine } from '@/hooks/useAnimationEngine';
@@ -21,21 +20,29 @@ export function AnimatedPattern({ patternId }: Props) {
   const pattern = PATTERNS.find(p => p.id === patternId);
   const engine = useAnimationEngine(pattern ?? null);
 
-  // Keyboard shortcuts scoped to the widget area
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      const tag = (e.target as HTMLElement).tagName;
-      if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
-      if (e.key === ' ' || e.key === 'k') {
-        e.preventDefault();
-        engine.playing ? engine.pause() : engine.play();
-      } else if (e.key === 'ArrowRight' || e.key === 'l') engine.nextStep();
-      else if (e.key === 'ArrowLeft' || e.key === 'j') engine.prevStep();
-      else if (e.key === 'r') engine.restart();
+  // Keyboard shortcuts scoped to the widget — the handler lives on the
+  // focusable <section> below, so it only fires when focus is inside this
+  // widget. It never touches a global/window listener, so it can't hijack
+  // Space (button activation / page scroll) elsewhere on the page.
+  function onKeyDown(e: React.KeyboardEvent<HTMLElement>) {
+    const target = e.target as HTMLElement;
+    // Let focused interactive controls (the transport buttons, variant chips,
+    // links, form fields) handle their own keys.
+    if (target.closest('button, a, input, select, textarea, [contenteditable]')) return;
+    if (e.key === ' ' || e.key === 'k') {
+      e.preventDefault();
+      if (engine.playing) engine.pause();
+      else engine.play();
+    } else if (e.key === 'ArrowRight' || e.key === 'l') {
+      e.preventDefault();
+      engine.nextStep();
+    } else if (e.key === 'ArrowLeft' || e.key === 'j') {
+      e.preventDefault();
+      engine.prevStep();
+    } else if (e.key === 'r') {
+      engine.restart();
     }
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [engine]);
+  }
 
   if (!pattern) return null;
 
@@ -47,7 +54,12 @@ export function AnimatedPattern({ patternId }: Props) {
   };
 
   return (
-    <section className="flex flex-col gap-3 rounded-2xl border border-border/50 bg-gradient-to-br from-card via-card to-muted/10 p-4 shadow-lg shadow-brand/[0.06] ring-1 ring-inset ring-white/[0.06] dark:ring-white/[0.02]">
+    <section
+      tabIndex={0}
+      onKeyDown={onKeyDown}
+      aria-label="动态拓扑可视化 — 聚焦后按 Space 播放或暂停，方向键切换步骤"
+      className="flex flex-col gap-3 rounded-2xl border border-border/50 bg-gradient-to-br from-card via-card to-muted/10 p-4 shadow-lg shadow-brand/[0.06] ring-1 ring-inset ring-white/[0.06] dark:ring-white/[0.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50"
+    >
       <header className="flex flex-wrap items-center gap-2.5">
         <span className="inline-flex items-center gap-1.5 rounded-full border border-brand/30 bg-brand/5 px-2.5 py-0.5 text-[11px] font-semibold text-brand shadow-sm shadow-brand/10">
           <span className="relative flex size-2">

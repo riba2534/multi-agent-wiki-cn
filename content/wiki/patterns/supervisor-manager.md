@@ -86,6 +86,6 @@ async function supervisor(task: UserTask) {
 
 ## 参考资料
 
-- [OpenAI Agents — 指南](https://developers.openai.com/api/docs/guides/Agent)
+- [OpenAI Agents — 指南](https://developers.openai.com/api/docs/guides/agents)
 - [LangChain 多 Agent](https://docs.langchain.com/oss/python/langchain/multi-agent)
 - [Google ADK 模式](https://developers.googleblog.com/developers-guide-to-multi-agent-patterns-in-adk/)

@@ -57,9 +57,9 @@ const mainAgent = new Agent({
 
 ## 推荐的追踪事件
 
-- `tool.Agent.invoked`
-- `tool.Agent.output`
-- `tool.Agent.error`
+- `tool.agent.invoked`
+- `tool.agent.output`
+- `tool.agent.error`
 
 ## 常见失败模式
 
@@ -78,5 +78,5 @@ const mainAgent = new Agent({
 
 ## 参考资料
 
-- [OpenAI 工具](https://openai.github.io/openai-Agent-python/tools/)
+- [OpenAI 工具](https://openai.github.io/openai-agents-python/tools/)
 - [LangChain 多 Agent](https://docs.langchain.com/oss/python/langchain/multi-agent)

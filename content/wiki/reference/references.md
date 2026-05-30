@@ -5,9 +5,9 @@ description: 多 Agent Wiki 引用的公开来源
 
 # 参考资料
 
-- **openai_agents**: <https://developers.openai.com/api/docs/guides/Agent>
-- **openai_handoffs**: <https://openai.github.io/openai-Agent-python/handoffs/>
-- **openai_tools**: <https://openai.github.io/openai-Agent-python/tools/>
+- **openai_agents**: <https://developers.openai.com/api/docs/guides/agents>
+- **openai_handoffs**: <https://openai.github.io/openai-agents-python/handoffs/>
+- **openai_tools**: <https://openai.github.io/openai-agents-python/tools/>
 - **langchain_multi**: <https://docs.langchain.com/oss/python/langchain/multi-agent>
 - **langchain_handoffs**: <https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs>
 - **google_adk_patterns**: <https://developers.googleblog.com/developers-guide-to-multi-agent-patterns-in-adk/>
@@ -18,7 +18,7 @@ description: 多 Agent Wiki 引用的公开来源
 - **mcp_spec**: <https://modelcontextprotocol.io/specification/2025-06-18>
 - **mcp_tools**: <https://modelcontextprotocol.io/specification/2025-06-18/server/tools>
 - **a2a_docs**: <https://a2a-protocol.org/latest/>
-- **a2a_google**: <https://developers.googleblog.com/en/a2a-a-new-era-of-Agent-interoperability/>
+- **a2a_google**: <https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/>
 - **agent_client_protocol**: <https://agentclientprotocol.com/get-started/introduction>
 - **survey_comm**: <https://arxiv.org/html/2502.14321v2>
 - **survey_llm_mas**: <https://arxiv.org/html/2412.17481v2>

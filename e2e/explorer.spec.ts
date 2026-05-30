@@ -72,11 +72,12 @@ test.describe('Multi-Agent Wiki', () => {
     await page.goto('/patterns/debate-judge');
     const primary = page.locator('.controls button.primary');
     await expect(primary).toBeVisible();
-    const before = (await primary.innerText()).trim();
+    // The widget auto-plays shortly after mount, so the button settles on
+    // "暂停". Wait for that known state before toggling — reading the label
+    // mid-autoplay-kickoff used to race the 100ms timer and flake.
+    await expect(primary).toHaveText(/暂停/);
     await primary.click();
-    await page.waitForTimeout(150);
-    const after = (await primary.innerText()).trim();
-    expect(after).not.toEqual(before);
+    await expect(primary).toHaveText(/播放/);
   });
 
   test('Patterns category label navigates to /patterns overview', async ({ page }) => {

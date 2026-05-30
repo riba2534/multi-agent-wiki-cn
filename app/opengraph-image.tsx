@@ -43,12 +43,13 @@ export default function Image() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#ff7b39',
-              fontSize: 26,
-              fontWeight: 700,
             }}
           >
-            ✦
+            {/* Inline SVG star — avoids fetching a dynamic font for the ✦ glyph
+                (which 400s during build and isn't in the base sans-serif). */}
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="#ff7b39">
+              <path d="M12 0 L14.4 9.6 L24 12 L14.4 14.4 L12 24 L9.6 14.4 L0 12 L9.6 9.6 Z" />
+            </svg>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <div style={{ fontSize: 22, fontWeight: 600, letterSpacing: '-0.01em' }}>{SITE_NAME}</div>

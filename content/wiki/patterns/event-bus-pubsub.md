@@ -15,7 +15,7 @@ Agent 通过事件、主题和队列进行异步通信，而不是通过直接�
 
 ```mermaid
 flowchart LR
-  A[Agent A] --> E["(事件总线)"]
+  A[Agent A] --> E[(事件总线)]
   B[Agent B] --> E
   E --> C["订阅者 C"]
   E --> D["订阅者 D"]

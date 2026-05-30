@@ -46,7 +46,8 @@ function spawnTokens(
   gBubbles: SVGGElement,
   duration: number,
   reverse: boolean,
-  cleanup: (fn: () => void) => void,
+  /** Register a disposer and get back a function that de-registers it. */
+  register: (fn: () => void) => () => void,
 ) {
   const len = pathEl.getTotalLength();
   const tokens: SVGCircleElement[] = [];
@@ -61,6 +62,13 @@ function spawnTokens(
   const start = performance.now();
   const traverseTime = duration * (1 - TOKEN_STAGGER * (TOKEN_COUNT - 1));
   let rafId: number;
+  const dispose = () => {
+    cancelAnimationFrame(rafId);
+    tokens.forEach(tk => tk.remove());
+  };
+  // Register the disposer, then drop it from the list once the run finishes on
+  // its own — otherwise cleanupRef grows unbounded across autoplay steps.
+  const unregister = register(dispose);
   function tick(now: number) {
     const elapsed = now - start;
     tokens.forEach((tk, i) => {
@@ -78,13 +86,10 @@ function spawnTokens(
       rafId = requestAnimationFrame(tick);
     } else {
       tokens.forEach(tk => tk.remove());
+      unregister();
     }
   }
   rafId = requestAnimationFrame(tick);
-  cleanup(() => {
-    cancelAnimationFrame(rafId);
-    tokens.forEach(tk => tk.remove());
-  });
 }
 
 interface Props {
@@ -251,10 +256,10 @@ export default function DiagramCanvas({ pattern, engineState, speed }: Props) {
       const dur = Math.min((1500 / speed) * 0.85, 1400);
       spawnTokens(path, gBubbles, dur, reverse, fn => {
         cleanupRef.current.push(fn);
+        return () => { cleanupRef.current = cleanupRef.current.filter(f => f !== fn); };
       });
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [engineState.firingEdges, engineState.activeNodes, engineState.dimNodes, engineState.doneEdges]);
+  }, [engineState.firingEdges, engineState.activeNodes, engineState.dimNodes, engineState.doneEdges, speed]);
 
   useEffect(() => {
     return () => { cleanupRef.current.forEach(fn => fn()); };
@@ -279,13 +284,7 @@ export default function DiagramCanvas({ pattern, engineState, speed }: Props) {
         className="diagram"
         viewBox="0 0 900 540"
         preserveAspectRatio="xMidYMid meet"
-      >
-        <defs>
-          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M0,0 L10,5 L0,10 z" fill="currentColor" />
-          </marker>
-        </defs>
-      </svg>
+      />
     </div>
   );
 }

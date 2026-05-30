@@ -49,13 +49,14 @@ const sop = [
 ];
 
 let artifacts = {};
-for (const step of sop) {
-  const result = await role(step.role).run({ ...step, context: artifacts });
-  artifacts[step.output] = result;
-  // QA 失败时回退到 PM 重新评估需求
-  if (step.role === "Tester" && !result.passed) {
-    artifacts = await role("PM").revise(artifacts, result.issues);
+for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+  for (const step of sop) {
+    artifacts[step.output] = await role(step.role).run({ ...step, context: artifacts });
   }
+  const report = artifacts["test-report.md"];
+  if (report.passed) break;
+  // QA 失败：把问题反馈给 PM 重新评估需求，然后按 SOP 重跑
+  artifacts = await role("PM").revise(artifacts, report.issues);
 }
 ```
 

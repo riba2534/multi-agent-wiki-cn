@@ -1,6 +1,6 @@
 ---
 title: 协议中介的 Agent 网络
-description: 通过标准协议（MCP、A2A、ACP）连接工具、Agent 、客户端和平台。
+description: 通过标准协议（MCP、A2A、ACP、Agent Client Protocol）连接工具、Agent、客户端和平台。
 ---
 
 # 协议中介的 Agent 网络
@@ -26,7 +26,6 @@ flowchart TD
   Runtime --> Local["本地 Agent"]
   MCP --> Tools["工具 / 资源 / 提示"]
   A2A --> Vendor["外部 Agent / 供应商"]
-  Local --> Runtime
 ```
 
 ## 适用场景
@@ -82,5 +81,5 @@ interface AgentRuntimePorts {
 - [MCP 规范](https://modelcontextprotocol.io/specification/2025-06-18)
 - [MCP 工具](https://modelcontextprotocol.io/specification/2025-06-18/server/tools)
 - [A2A 文档](https://a2a-protocol.org/latest/)
-- [A2A — Google 博客](https://developers.googleblog.com/en/a2a-a-new-era-of-Agent-interoperability/)
+- [A2A — Google 博客](https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/)
 - [Agent Client Protocol](https://agentclientprotocol.com/get-started/introduction)

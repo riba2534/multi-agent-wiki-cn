@@ -91,8 +91,18 @@ export function getNav(): NavItem[] {
 export function flatNav(): NavLeaf[] {
   const out: NavLeaf[] = [];
   for (const item of getNav()) {
-    if (item.type === 'doc') out.push(item);
-    else for (const it of item.items) if (it.type === 'doc') out.push(it);
+    if (item.type === 'doc') {
+      out.push(item);
+    } else {
+      // A category whose header links to an overview page (e.g. Patterns →
+      // /patterns) participates in prev/next via a synthetic leaf. It is not
+      // rendered as a separate sidebar item (the sidebar reads getNav()).
+      if (item.href) {
+        const slugStr = item.href.replace(/^\//, '');
+        out.push({ type: 'doc', slug: slugStr ? slugStr.split('/') : [], href: item.href, label: item.label });
+      }
+      for (const it of item.items) if (it.type === 'doc') out.push(it);
+    }
   }
   return out;
 }

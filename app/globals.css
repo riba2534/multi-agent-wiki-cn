@@ -519,10 +519,9 @@ svg.diagram .msg-token.return {
     radial-gradient(ellipse 70% 50% at 85% 110%, oklch(from var(--brand-accent) l c h / 0.07), transparent 70%);
 }
 
-/* ─── Landing cover: fixed-dark "observatory" scope ─── */
-/* Override the design tokens locally so every token-driven child (buttons,
-   badge, gradient text) adapts to the dark ground — independent of the site's
-   light/dark theme, as is conventional for a landing hero. */
+/* ─── Landing cover: "observatory" scope ─── */
+/* Paint the hero ground from theme design tokens so it follows the site's
+   light/dark theme along with every token-driven child (buttons, badge). */
 .cover-observatory {
   background:
     radial-gradient(ellipse 100% 80% at 50% 16%, oklch(from var(--brand) l c h / 0.12), transparent 60%),

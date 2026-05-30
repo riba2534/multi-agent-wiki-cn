@@ -66,19 +66,19 @@ export type AgentEvent = {
 ```text
 会话
 ├─ 规划器
-│  └─ 计划.已创建
+│  └─ plan.created
 ├─ 搜索 Agent
-│  ├─ 工具.网络搜索
-│  └─ 结果.摘要
+│  ├─ tool.web_search
+│  └─ result.summary
 ├─ 代码 Agent
-│  ├─ 工具.读取文件
-│  ├─ 工具.编辑文件
-│  └─ 补丁.已创建
+│  ├─ tool.read_file
+│  ├─ tool.edit_file
+│  └─ patch.created
 ├─ 测试 Agent
-│  └─ 测试.失败
+│  └─ test.failed
 ├─ 代码 Agent 重试
 └─ 审查者
-   └─ 已批准
+   └─ approved
 ```
 
 ## 最小可行流水线

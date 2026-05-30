@@ -10,6 +10,10 @@ export interface WikiDoc {
   description?: string;
   content: string;
   href: string;
+  /** Repo-relative path of the markdown source that backs this doc, e.g.
+   *  `content/wiki/patterns/index.md`. Used to build the "edit this page" link
+   *  correctly for index-backed routes. */
+  relPath: string;
 }
 
 interface FrontMatter {
@@ -27,7 +31,10 @@ function readDoc(filePath: string, slug: string[]): WikiDoc | null {
     title: fm.title ?? slug[slug.length - 1] ?? 'Untitled',
     description: fm.description,
     content,
-    href: '/wiki' + (slug.length ? '/' + slug.join('/') : ''),
+    // Routes are served at the root (e.g. /patterns/supervisor-manager), not
+    // under a /wiki prefix.
+    href: slug.length ? '/' + slug.join('/') : '/',
+    relPath: path.relative(process.cwd(), filePath).split(path.sep).join('/'),
   };
 }
 
