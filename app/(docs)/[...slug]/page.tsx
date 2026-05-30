@@ -37,13 +37,11 @@ export async function generateMetadata({ params }: Props) {
       title: doc.title,
       description: doc.description,
       url: path,
-      images: [{ url: `/og${path}`, width: 1200, height: 630, alt: doc.title }],
     },
     twitter: {
       card: 'summary_large_image' as const,
       title: doc.title,
       description: doc.description,
-      images: [`/og${path}`],
     },
   };
 }

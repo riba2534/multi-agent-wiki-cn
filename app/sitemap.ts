@@ -2,6 +2,8 @@ import type { MetadataRoute } from 'next';
 import { listAllSlugs } from '@/lib/wiki';
 import { SITE_URL } from '@/lib/site';
 
+export const dynamic = 'force-static';
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const slugs = listAllSlugs();
   return slugs.map(slug => {
