@@ -40,13 +40,13 @@ export function Cover({
           className="absolute inset-0"
           style={{
             background:
-              'radial-gradient(ellipse 58% 50% at 50% 46%, oklch(0.10 0.02 278 / 0.78), oklch(0.10 0.02 278 / 0.30) 55%, transparent 80%)',
+              'radial-gradient(ellipse 58% 50% at 50% 46%, oklch(from var(--background) l c h / 0.72), oklch(from var(--background) l c h / 0.28) 55%, transparent 80%)',
           }}
         />
         {/* top + bottom fades so the nav and the section seam read cleanly */}
         <div
           className="absolute inset-x-0 top-0 h-32"
-          style={{ background: 'linear-gradient(to bottom, oklch(0.10 0.015 275 / 0.9), transparent)' }}
+          style={{ background: 'linear-gradient(to bottom, oklch(from var(--background) l c h / 0.9), transparent)' }}
         />
         <div
           className="absolute inset-x-0 bottom-0 h-40"

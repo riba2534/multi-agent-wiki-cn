@@ -340,25 +340,16 @@ h4, h5, h6 { font-weight: 500; }
    visual language. A local token scope flips the SVG palette to dark; every
    token-driven rule below (node/edge/label) adapts automatically. */
 .diagram-observatory {
-  --background: oklch(0.13 0.012 275);
-  --card: oklch(0.205 0.013 275);
-  --foreground: oklch(0.96 0.005 280);
-  --muted-foreground: oklch(0.70 0.02 280);
-  --border: oklch(1 0 0 / 0.14);
-  --brand: oklch(0.72 0.225 278);
-  --brand-soft: oklch(0.30 0.115 278);
-  --brand-ring: oklch(0.72 0.225 278 / 0.32);
-  --warning: oklch(0.80 0.14 72);
   background:
-    radial-gradient(ellipse 78% 58% at 50% -4%, oklch(0.23 0.045 278 / 0.7), transparent 68%),
-    linear-gradient(180deg, oklch(0.16 0.014 275), oklch(0.125 0.012 275));
+    radial-gradient(ellipse 80% 60% at 50% -5%, oklch(from var(--brand) l c h / 0.07), transparent 70%),
+    linear-gradient(180deg, oklch(from var(--muted) l c h / 0.55), oklch(from var(--muted) l c h / 0.18));
 }
 .diagram-observatory::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 0;
-  background-image: radial-gradient(oklch(0.72 0.2 278 / 0.09) 1px, transparent 1px);
+  background-image: radial-gradient(oklch(from var(--brand) l c h / 0.08) 1px, transparent 1px);
   background-size: 26px 26px;
   -webkit-mask-image: radial-gradient(ellipse 72% 72% at 50% 45%, black, transparent 86%);
   mask-image: radial-gradient(ellipse 72% 72% at 50% 45%, black, transparent 86%);
@@ -533,30 +524,16 @@ svg.diagram .msg-token.return {
    badge, gradient text) adapts to the dark ground — independent of the site's
    light/dark theme, as is conventional for a landing hero. */
 .cover-observatory {
-  --background: oklch(0.11 0.014 275);
-  --foreground: oklch(0.97 0.005 280);
-  --muted-foreground: oklch(0.72 0.02 280);
-  --card: oklch(0.2 0.012 275);
-  --border: oklch(1 0 0 / 0.14);
-  --input: oklch(1 0 0 / 0.16);
-  --accent: oklch(0.26 0.02 275);
-  --accent-foreground: oklch(0.97 0.005 280);
-  --ring: oklch(0.72 0.225 278);
-  --brand: oklch(0.72 0.225 278);
-  --brand-foreground: oklch(0.14 0.04 275);
-  --brand-ring: oklch(0.72 0.225 278 / 0.30);
-  --brand-gradient: linear-gradient(135deg, oklch(0.74 0.2 278), oklch(0.78 0.15 245));
-  color: var(--foreground);
   background:
-    radial-gradient(ellipse 100% 80% at 50% 20%, oklch(0.21 0.04 278), transparent 66%),
-    radial-gradient(ellipse 60% 50% at 86% 104%, oklch(0.22 0.05 250 / 0.5), transparent 70%),
-    linear-gradient(180deg, oklch(0.12 0.016 275), oklch(0.095 0.012 275));
+    radial-gradient(ellipse 100% 80% at 50% 16%, oklch(from var(--brand) l c h / 0.12), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 86% 104%, oklch(from var(--brand-accent) l c h / 0.10), transparent 70%),
+    linear-gradient(180deg, oklch(from var(--background) l c h), oklch(from var(--muted) l c h / 0.5));
 }
 
 /* ─── Constellation (cover hero visual) ─── */
 .constellation { display: block; }
 .constellation .c-link {
-  stroke: oklch(0.72 0.16 278 / 0.42);
+  stroke: oklch(from var(--brand) l c h / 0.4);
   stroke-width: 1;
   stroke-dasharray: 5 9;
   fill: none;

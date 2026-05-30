@@ -261,7 +261,7 @@ export default function DiagramCanvas({ pattern, engineState, speed }: Props) {
   }, []);
 
   return (
-    <div className="canvas-wrap diagram-observatory group relative w-full h-[clamp(380px,52vh,580px)] flex-shrink-0 overflow-hidden rounded-2xl border border-white/10 shadow-xl shadow-brand/15 ring-1 ring-inset ring-white/[0.06] transition-shadow hover:shadow-2xl hover:shadow-brand/25">
+    <div className="canvas-wrap diagram-observatory group relative w-full h-[clamp(380px,52vh,580px)] flex-shrink-0 overflow-hidden rounded-2xl border border-border/60 shadow-xl shadow-brand/10 ring-1 ring-inset ring-black/[0.03] dark:ring-white/[0.05] transition-shadow hover:shadow-2xl hover:shadow-brand/20">
       <div className="absolute left-3 top-3 z-10 flex items-center gap-1.5 rounded-lg border border-border/30 bg-background/70 px-2 py-1 backdrop-blur font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
         <span className="opacity-60">●</span>
         <span>Diagram</span>
