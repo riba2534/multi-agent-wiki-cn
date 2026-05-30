@@ -1,10 +1,14 @@
 import type { Metadata, Viewport } from 'next';
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
+import { Toaster } from 'sonner';
 import { ThemeProvider } from '@/components/theme-provider';
+import { UIProvider } from '@/components/providers/ui-provider';
 import { TopNav } from '@/components/top-nav';
-import { WikiSidebar } from '@/components/wiki/sidebar';
+import { MobileNav } from '@/components/wiki/mobile-nav';
+import { CommandPalette } from '@/components/search/command-palette';
 import { getNav } from '@/lib/wiki-nav';
+import { getSearchIndex } from '@/lib/search-index';
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from '@/lib/site';
 import './globals.css';
 
@@ -52,9 +56,11 @@ export const viewport: Viewport = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  // Sidebar lives here in the root layout so it persists across navigation —
-  // preserving scroll position and avoiding a flash of re-render.
+  // The desktop sidebar lives in the (docs) layout so the home page can render
+  // full-bleed without it. The mobile drawer + command palette stay here in the
+  // root so they're reachable from every route, including the landing cover.
   const nav = getNav();
+  const searchIndex = getSearchIndex();
 
   return (
     <html
@@ -69,25 +75,27 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="relative min-h-dvh bg-background text-foreground">
-            {/* Subtle ambient radial gradient */}
-            <div
-              className="pointer-events-none fixed inset-0 -z-10 opacity-30 dark:opacity-20"
-              style={{
-                background: 'radial-gradient(ellipse 80% 50% at 50% -20%, oklch(0.55 0.22 275 / 0.10), transparent)',
-              }}
-              aria-hidden
-            />
-            <TopNav />
+          <UIProvider>
+            <div className="relative min-h-dvh bg-background text-foreground">
+              {/* Top brand glow */}
+              <div
+                className="pointer-events-none fixed inset-0 -z-10 opacity-30 dark:opacity-20"
+                style={{
+                  background: 'radial-gradient(ellipse 80% 50% at 50% -20%, oklch(0.55 0.22 275 / 0.10), transparent)',
+                }}
+                aria-hidden
+              />
+              {/* Dot-grid texture + secondary cyan glow */}
+              <div className="bg-ambient" aria-hidden />
+              <TopNav />
 
-            <div className="mx-auto flex max-w-[1400px] gap-0 px-4 lg:px-6">
-              <aside className="hidden w-[240px] shrink-0 border-r border-border lg:block">
-                <WikiSidebar nav={nav} />
-              </aside>
-
-              <div className="flex min-w-0 flex-1">{children}</div>
+              {children}
             </div>
-          </div>
+
+            <MobileNav nav={nav} />
+            <CommandPalette index={searchIndex} />
+            <Toaster theme="system" position="bottom-right" closeButton />
+          </UIProvider>
         </ThemeProvider>
       </body>
     </html>

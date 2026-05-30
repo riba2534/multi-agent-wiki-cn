@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { Check, Copy } from 'lucide-react';
+import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
 interface Props {
@@ -49,7 +50,7 @@ export function CodeBlock({ lang, source, children }: Props) {
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch {
-      /* clipboard blocked — silent */
+      toast.error('复制失败，请手动选择代码');
     }
   }
 

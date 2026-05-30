@@ -7,22 +7,29 @@ import { ChevronRight } from 'lucide-react';
 import type { NavItem, NavLeaf, NavGroupLabel } from '@/lib/wiki-nav';
 import { cn } from '@/lib/utils';
 
-interface Props { nav: NavItem[] }
+interface Props {
+  nav: NavItem[];
+  /** 'desktop' is the sticky rail in the layout; 'drawer' is the mobile sheet,
+   *  which lets its parent own scrolling and skips scroll persistence. */
+  variant?: 'desktop' | 'drawer';
+}
 
 const SCROLL_KEY = 'wiki:sidebar-scroll';
 
 // SSR-safe useLayoutEffect.
 const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
-export function WikiSidebar({ nav }: Props) {
+export function WikiSidebar({ nav, variant = 'desktop' }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const isDrawer = variant === 'drawer';
 
   // Capture scroll position the instant the user clicks any link inside the
   // sidebar, BEFORE Next.js (or framer-motion's layoutId animations) get a
   // chance to mutate scrollTop on the container. Saving on scroll events
   // alone races with the auto-scroll Next.js performs on navigation.
   useEffect(() => {
+    if (isDrawer) return;
     const el = scrollRef.current;
     if (!el) return;
     const onClick = (e: MouseEvent) => {
@@ -32,23 +39,28 @@ export function WikiSidebar({ nav }: Props) {
     };
     el.addEventListener('click', onClick, true);
     return () => el.removeEventListener('click', onClick, true);
-  }, []);
+  }, [isDrawer]);
 
   // Restore on every route change, synchronously after DOM updates — this
   // wins over any post-navigation scroll reset.
   useIsoLayoutEffect(() => {
+    if (isDrawer) return;
     const el = scrollRef.current;
     if (!el) return;
     const saved = sessionStorage.getItem(SCROLL_KEY);
     if (saved !== null) el.scrollTop = Number(saved) || 0;
-  }, [pathname]);
+  }, [pathname, isDrawer]);
 
   return (
     <div
       ref={scrollRef}
-      className="sticky top-16 h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain"
+      className={cn(
+        isDrawer
+          ? ''
+          : 'sticky top-16 h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain',
+      )}
     >
-      <nav className="flex flex-col gap-0.5 py-6 pr-4">
+      <nav className={cn('flex flex-col gap-0.5', isDrawer ? 'py-4 pr-1' : 'py-6 pr-4')}>
       {nav.map((item, i) =>
         item.type === 'doc' ? (
           <NavDoc key={item.href} item={item} />

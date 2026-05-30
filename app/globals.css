@@ -7,9 +7,9 @@
 :root {
   --radius: 0.75rem;
 
-  /* Brand gradient — core visual identity */
-  --brand-gradient: linear-gradient(135deg, oklch(0.55 0.22 275), oklch(0.65 0.18 300));
-  --brand-gradient-subtle: linear-gradient(135deg, oklch(0.55 0.22 275 / 0.06), oklch(0.65 0.18 300 / 0.04));
+  /* Brand gradient — core visual identity (violet → cyan-blue spectrum) */
+  --brand-gradient: linear-gradient(135deg, oklch(0.55 0.22 275), oklch(0.62 0.16 250));
+  --brand-gradient-subtle: linear-gradient(135deg, oklch(0.55 0.22 275 / 0.06), oklch(0.62 0.16 250 / 0.04));
 
   /* Background — subtle lavender-grey tint */
   --background: oklch(0.99 0.003 280);
@@ -30,7 +30,7 @@
   --muted: oklch(0.96 0.008 280);
   --muted-foreground: oklch(0.5 0.02 280);
 
-  --accent: oklch(0.95 0.03 285);
+  --accent: oklch(0.955 0.035 278);
   --accent-foreground: oklch(0.24 0.025 278);
 
   --destructive: oklch(0.58 0.22 27);
@@ -45,6 +45,11 @@
   --brand-foreground: oklch(0.99 0.003 280);
   --brand-soft: oklch(0.94 0.06 280);
   --brand-ring: oklch(0.55 0.22 275 / 0.2);
+  /* Cyan-blue end of the brand spectrum — for gradient highlights & ambient glow */
+  --brand-accent: oklch(0.62 0.16 250);
+
+  /* Background dot-grid line color */
+  --grid-line: oklch(0.55 0.22 275 / 0.045);
 
   --warning: oklch(0.65 0.14 70);
   --warning-soft: oklch(0.965 0.035 80);
@@ -67,10 +72,10 @@
 }
 
 .dark {
-  --brand-gradient: linear-gradient(135deg, oklch(0.72 0.2 280), oklch(0.78 0.16 300));
-  --brand-gradient-subtle: linear-gradient(135deg, oklch(0.72 0.2 280 / 0.08), oklch(0.78 0.16 300 / 0.04));
+  --brand-gradient: linear-gradient(135deg, oklch(0.70 0.225 278), oklch(0.74 0.16 245));
+  --brand-gradient-subtle: linear-gradient(135deg, oklch(0.70 0.225 278 / 0.08), oklch(0.74 0.16 245 / 0.04));
 
-  --background: oklch(0.14 0.008 275);
+  --background: oklch(0.145 0.012 275);
   --foreground: oklch(0.97 0.005 280);
 
   --card: oklch(0.18 0.01 275);
@@ -86,7 +91,7 @@
   --secondary-foreground: oklch(0.97 0.005 280);
 
   --muted: oklch(0.24 0.012 275);
-  --muted-foreground: oklch(0.68 0.015 280);
+  --muted-foreground: oklch(0.70 0.018 280);
 
   --accent: oklch(0.24 0.012 275);
   --accent-foreground: oklch(0.97 0.005 280);
@@ -98,10 +103,13 @@
   --input: oklch(1 0 0 / 0.12);
   --ring: oklch(0.55 0.22 275);
 
-  --brand: oklch(0.72 0.2 280);
+  --brand: oklch(0.70 0.225 278);
   --brand-foreground: oklch(0.14 0.04 275);
-  --brand-soft: oklch(0.26 0.1 278);
-  --brand-ring: oklch(0.72 0.2 280 / 0.28);
+  --brand-soft: oklch(0.28 0.115 278);
+  --brand-ring: oklch(0.70 0.225 278 / 0.28);
+  --brand-accent: oklch(0.74 0.16 245);
+
+  --grid-line: oklch(0.72 0.2 278 / 0.05);
 
   --warning: oklch(0.74 0.14 70);
   --warning-soft: oklch(0.26 0.06 70);
@@ -110,14 +118,14 @@
   --sidebar: oklch(0.16 0.01 275);
   --sidebar-foreground: oklch(0.97 0.005 280);
   --sidebar-border: oklch(1 0 0 / 0.06);
-  --sidebar-accent: oklch(0.26 0.1 278);
-  --sidebar-accent-foreground: oklch(0.92 0.06 285);
+  --sidebar-accent: oklch(0.29 0.12 278);
+  --sidebar-accent-foreground: oklch(0.92 0.075 278);
 
   --sidebar-group: oklch(0.58 0.04 280);
 
   --shadow-card: 0 1px 3px oklch(0 0 0 / 0.30), 0 4px 20px oklch(0.55 0.22 275 / 0.08);
   --shadow-card-hover: 0 1px 3px oklch(0 0 0 / 0.40), 0 12px 36px oklch(0.55 0.22 275 / 0.14);
-  --shadow-nav: 0 1px 0 oklch(0.65 0.18 300 / 0.12), 0 4px 16px oklch(0.55 0.22 275 / 0.06);
+  --shadow-nav: 0 1px 0 oklch(0.65 0.18 300 / 0.12), 0 4px 16px oklch(0.55 0.22 275 / 0.08);
 }
 
 @theme inline {
@@ -144,6 +152,7 @@
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
   --color-brand-soft: var(--brand-soft);
+  --color-brand-accent: var(--brand-accent);
   --color-warning: var(--warning);
   --color-warning-soft: var(--warning-soft);
   --color-success: var(--success);
@@ -325,6 +334,38 @@ h4, h5, h6 { font-weight: 500; }
   transition: all 280ms cubic-bezier(.34,1.56,.64,1);
 }
 
+/* ─── Diagram canvas: fixed-dark "observatory" stage ─── */
+/* The animated diagram is always a dark stage — regardless of the site theme —
+   so it reads as a live data-viz panel and shares the cover constellation's
+   visual language. A local token scope flips the SVG palette to dark; every
+   token-driven rule below (node/edge/label) adapts automatically. */
+.diagram-observatory {
+  --background: oklch(0.13 0.012 275);
+  --card: oklch(0.205 0.013 275);
+  --foreground: oklch(0.96 0.005 280);
+  --muted-foreground: oklch(0.70 0.02 280);
+  --border: oklch(1 0 0 / 0.14);
+  --brand: oklch(0.72 0.225 278);
+  --brand-soft: oklch(0.30 0.115 278);
+  --brand-ring: oklch(0.72 0.225 278 / 0.32);
+  --warning: oklch(0.80 0.14 72);
+  background:
+    radial-gradient(ellipse 78% 58% at 50% -4%, oklch(0.23 0.045 278 / 0.7), transparent 68%),
+    linear-gradient(180deg, oklch(0.16 0.014 275), oklch(0.125 0.012 275));
+}
+.diagram-observatory::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: radial-gradient(oklch(0.72 0.2 278 / 0.09) 1px, transparent 1px);
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(ellipse 72% 72% at 50% 45%, black, transparent 86%);
+  mask-image: radial-gradient(ellipse 72% 72% at 50% 45%, black, transparent 86%);
+  pointer-events: none;
+}
+.diagram-observatory svg.diagram { position: relative; z-index: 1; }
+
 /* ─── Diagram SVG styling ─── */
 svg.diagram { width: 100%; height: 100%; display: block; }
 
@@ -404,7 +445,11 @@ svg.diagram .edge {
   transition: stroke 240ms ease, stroke-width 240ms ease, opacity 240ms ease;
 }
 svg.diagram .edge.dashed { stroke-dasharray: 5 4; }
-svg.diagram .edge.firing { stroke: var(--brand); stroke-width: 2.25; }
+svg.diagram .edge.firing {
+  stroke: var(--brand);
+  stroke-width: 2.25;
+  filter: drop-shadow(0 0 3px var(--brand-ring));
+}
 svg.diagram .edge.done { stroke: var(--brand); stroke-width: 1.5; opacity: 0.7; }
 
 svg.diagram .edge-label {
@@ -423,7 +468,7 @@ svg.diagram .edge-label-bg { fill: var(--card); }
 svg.diagram .msg-token {
   fill: var(--brand);
   pointer-events: none;
-  filter: drop-shadow(0 0 6px var(--brand-ring));
+  filter: drop-shadow(0 0 7px var(--brand)) drop-shadow(0 0 2px var(--brand));
 }
 svg.diagram .msg-token.return {
   fill: var(--warning);
@@ -442,3 +487,130 @@ svg.diagram .msg-token.return {
 .code-block .c { color: oklch(0.52 0.02 280); font-style: italic; }
 .code-block .n { color: oklch(0.76 0.06 240); }
 .code-block .f { color: oklch(0.74 0.14 65); }
+
+/* ─── Command palette (cmdk) ─── */
+[cmdk-group-heading] {
+  padding: 0.625rem 0.5rem 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+[cmdk-group]:not([hidden]) ~ [cmdk-group] [cmdk-group-heading] {
+  margin-top: 0.25rem;
+}
+
+/* ─── Ambient background: dot-grid + dual radial glow ─── */
+.bg-ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  pointer-events: none;
+}
+.bg-ambient::before {
+  /* fine dot grid, fading out toward the bottom so it never fights the text */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--grid-line) 1px, transparent 1px);
+  background-size: 28px 28px;
+  -webkit-mask-image: linear-gradient(to bottom, black, transparent 65%);
+  mask-image: linear-gradient(to bottom, black, transparent 65%);
+}
+.bg-ambient::after {
+  /* secondary cool-cyan glow anchored bottom-right for depth */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 85% 110%, oklch(from var(--brand-accent) l c h / 0.07), transparent 70%);
+}
+
+/* ─── Landing cover: fixed-dark "observatory" scope ─── */
+/* Override the design tokens locally so every token-driven child (buttons,
+   badge, gradient text) adapts to the dark ground — independent of the site's
+   light/dark theme, as is conventional for a landing hero. */
+.cover-observatory {
+  --background: oklch(0.11 0.014 275);
+  --foreground: oklch(0.97 0.005 280);
+  --muted-foreground: oklch(0.72 0.02 280);
+  --card: oklch(0.2 0.012 275);
+  --border: oklch(1 0 0 / 0.14);
+  --input: oklch(1 0 0 / 0.16);
+  --accent: oklch(0.26 0.02 275);
+  --accent-foreground: oklch(0.97 0.005 280);
+  --ring: oklch(0.72 0.225 278);
+  --brand: oklch(0.72 0.225 278);
+  --brand-foreground: oklch(0.14 0.04 275);
+  --brand-ring: oklch(0.72 0.225 278 / 0.30);
+  --brand-gradient: linear-gradient(135deg, oklch(0.74 0.2 278), oklch(0.78 0.15 245));
+  color: var(--foreground);
+  background:
+    radial-gradient(ellipse 100% 80% at 50% 20%, oklch(0.21 0.04 278), transparent 66%),
+    radial-gradient(ellipse 60% 50% at 86% 104%, oklch(0.22 0.05 250 / 0.5), transparent 70%),
+    linear-gradient(180deg, oklch(0.12 0.016 275), oklch(0.095 0.012 275));
+}
+
+/* ─── Constellation (cover hero visual) ─── */
+.constellation { display: block; }
+.constellation .c-link {
+  stroke: oklch(0.72 0.16 278 / 0.42);
+  stroke-width: 1;
+  stroke-dasharray: 5 9;
+  fill: none;
+  animation: cFlow 3.4s linear infinite;
+  animation-delay: var(--d, 0s);
+}
+.constellation .c-spoke {
+  stroke-width: 0.9;
+  stroke-dasharray: 2.5 7;
+  opacity: 0.3;
+  fill: none;
+  animation: cFlow 2.6s linear infinite;
+  animation-delay: var(--d, 0s);
+}
+.constellation .c-halo {
+  fill: currentColor;
+  opacity: 0.16;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cBreathe var(--dur, 4s) ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+.constellation .c-core {
+  fill: currentColor;
+  filter: drop-shadow(0 0 5px currentColor);
+}
+.constellation .c-cluster-label {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-anchor: middle;
+  opacity: 0.82;
+}
+
+@keyframes cFlow { to { stroke-dashoffset: -28; } }
+@keyframes cBreathe {
+  0%, 100% { opacity: 0.10; transform: scale(0.8); }
+  50%      { opacity: 0.34; transform: scale(1.2); }
+}
+
+/* ─── Accessibility: honor reduced-motion globally ─── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .live-indicator::before,
+  svg.diagram .node.active .node-rect,
+  svg.diagram .node.kind-store.active circle {
+    animation: none !important;
+  }
+}

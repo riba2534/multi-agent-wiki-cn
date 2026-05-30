@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { Children, isValidElement, type ReactElement } from 'react';
+import { ExternalLink } from 'lucide-react';
 import ReactMarkdown, { type Components } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
@@ -129,14 +130,18 @@ export function Markdown({ content, slug }: Props) {
           </Link>
         );
       }
+      const external = href?.startsWith('http');
       return (
         <a
           href={href}
-          target={href?.startsWith('http') ? '_blank' : undefined}
-          rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
+          target={external ? '_blank' : undefined}
+          rel={external ? 'noopener noreferrer' : undefined}
           className="font-medium text-brand underline decoration-brand/25 underline-offset-2 transition-colors hover:decoration-brand/70"
         >
           {children}
+          {external && (
+            <ExternalLink className="ml-0.5 inline size-3 -translate-y-px opacity-60" aria-hidden />
+          )}
         </a>
       );
     },
@@ -149,12 +154,23 @@ export function Markdown({ content, slug }: Props) {
       >
         <a href={`#${(props as { id?: string }).id ?? ''}`} className="no-underline">
           {children}
+          <span className="ml-2 select-none font-normal text-brand/40 opacity-0 transition-opacity group-hover:opacity-100" aria-hidden>
+            #
+          </span>
         </a>
       </h2>
     ),
     h3: ({ children, ...props }) => (
-      <h3 {...props} className="mt-8 mb-3 scroll-mt-20 text-lg font-semibold tracking-tight text-foreground">
-        {children}
+      <h3
+        {...props}
+        className="group mt-8 mb-3 scroll-mt-20 text-lg font-semibold tracking-tight text-foreground"
+      >
+        <a href={`#${(props as { id?: string }).id ?? ''}`} className="no-underline">
+          {children}
+          <span className="ml-2 select-none font-normal text-brand/40 opacity-0 transition-opacity group-hover:opacity-100" aria-hidden>
+            #
+          </span>
+        </a>
       </h3>
     ),
     h4: ({ children }) => (
@@ -178,18 +194,20 @@ export function Markdown({ content, slug }: Props) {
     li: ({ children }) => <li className="leading-relaxed">{children}</li>,
     hr: () => <hr className="my-10 border-border/60" />,
     blockquote: ({ children }) => (
-      <blockquote className="my-5 border-l-[3px] border-brand/60 bg-brand/[0.04] px-5 py-3 text-[14px] italic leading-relaxed text-foreground/80 rounded-r-lg">
+      <blockquote className="my-5 rounded-r-lg border-l-[3px] border-brand/60 bg-brand/[0.04] px-5 py-3 text-[14px] not-italic leading-relaxed text-foreground/80 [&_p]:my-1.5">
         {children}
       </blockquote>
     ),
 
     table: ({ children }) => (
       <div className="my-5 overflow-x-auto rounded-xl border border-border/60 shadow-sm">
-        <table className="w-full border-collapse text-[13px]">{children}</table>
+        {/* min-width keeps columns readable on phones — the container scrolls
+            horizontally instead of crushing every cell into one-char-per-line. */}
+        <table className="w-full min-w-[34rem] border-collapse text-[13px]">{children}</table>
       </div>
     ),
     thead: ({ children }) => <thead className="bg-muted/40">{children}</thead>,
-    tbody: ({ children }) => <tbody>{children}</tbody>,
+    tbody: ({ children }) => <tbody className="[&_tr:nth-child(even)]:bg-muted/20">{children}</tbody>,
     tr: ({ children }) => <tr className="border-b border-border/50 last:border-b-0">{children}</tr>,
     th: ({ children }) => (
       <th className="px-4 py-2.5 text-left font-semibold text-foreground">{children}</th>
@@ -236,7 +254,7 @@ export function Markdown({ content, slug }: Props) {
       );
     },
 
-    strong: ({ children }) => <strong className="font-semibold text-foreground/95">{children}</strong>,
+    strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
     em: ({ children }) => <em className="italic">{children}</em>,
   };
 

@@ -28,31 +28,32 @@ export default function Controls({
     <div className="controls flex flex-wrap items-center gap-2">
       <Button variant="outline" size="sm" onClick={onRestart} className="font-mono text-[11px] shadow-sm transition-all hover:shadow-md hover:-translate-y-px">
         <RotateCcw className="size-3.5" />
-        重播
+        <span className="hidden sm:inline">重播</span>
       </Button>
 
       <Button variant="outline" size="sm" onClick={onPrev} aria-label="上一步" className="font-mono text-[11px] shadow-sm transition-all hover:shadow-md hover:-translate-y-px">
         <ChevronLeft className="size-3.5" />
-        上一步
+        <span className="hidden sm:inline">上一步</span>
       </Button>
 
       <Button
         variant="brand"
         size="sm"
         onClick={playing ? onPause : onPlay}
-        className="primary min-w-[80px] font-mono text-[11px] shadow-md shadow-brand/20 transition-all hover:shadow-lg hover:shadow-brand/25 hover:-translate-y-px"
+        className="primary font-mono text-[11px] shadow-md shadow-brand/20 transition-all hover:shadow-lg hover:shadow-brand/25 hover:-translate-y-px sm:min-w-[80px]"
       >
         {playing ? <Pause className="size-3.5" /> : <Play className="size-3.5" />}
-        {playing ? '暂停' : '播放'}
+        <span className="hidden sm:inline">{playing ? '暂停' : '播放'}</span>
       </Button>
 
       <Button variant="outline" size="sm" onClick={onNext} aria-label="下一步" className="font-mono text-[11px] shadow-sm transition-all hover:shadow-md hover:-translate-y-px">
-        下一步
+        <span className="hidden sm:inline">下一步</span>
         <ChevronRight className="size-3.5" />
       </Button>
 
-      {/* Timeline scrubber */}
-      <div className="flex h-9 min-w-0 flex-1 items-center gap-1.5 rounded-xl border border-border/60 bg-gradient-to-br from-card to-muted/20 px-3 shadow-sm ring-1 ring-inset ring-white/5 dark:ring-white/[0.02]">
+      {/* Timeline scrubber — hidden on phones (the prev/next buttons cover
+          stepping; 8 dots are too cramped to tap on a narrow screen). */}
+      <div className="hidden h-9 min-w-0 flex-1 items-center gap-1.5 rounded-xl border border-border/60 bg-gradient-to-br from-card to-muted/20 px-3 shadow-sm ring-1 ring-inset ring-white/5 dark:ring-white/[0.02] sm:flex">
         {Array.from({ length: totalSteps }, (_, i) => (
           <div key={i} className="flex flex-1 items-center gap-1.5 first:flex-none">
             {i > 0 && (

@@ -116,6 +116,27 @@ export const PATTERN_CATEGORY: Record<string, PatternCategory> = Object.fromEntr
   PATTERN_CATEGORIES.flatMap(({ label, slugs }) => slugs.map(s => [s, label])),
 );
 
+/** Chinese display name for each taxonomy dimension. */
+export const CATEGORY_ZH: Record<PatternCategory, string> = {
+  Control:     '控制结构',
+  Information: '信息流',
+  Decision:    '决策',
+  Environment: '执行环境',
+  Protocol:    '协议互联',
+  Specialized: '专项模式',
+};
+
+/** The representative animation (a `data/patterns.ts` id) shown for each
+ *  dimension in the home category switcher. One canonical pattern per axis. */
+export const CATEGORY_REPRESENTATIVE: Record<PatternCategory, string> = {
+  Control:     'supervisor',
+  Information: 'parallel',
+  Decision:    'debate',
+  Environment: 'human-in-the-loop',
+  Protocol:    'protocol',
+  Specialized: 'composite-pattern',
+};
+
 /** Hex equivalents of CATEGORY_TONE — used by the dynamic OG image generator,
  *  which renders via Satori and can't use Tailwind classes. */
 export const CATEGORY_HEX: Record<PatternCategory, string> = {

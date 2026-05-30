@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Upstream reference copy — not part of the build, kept for provenance only.
+    "upstream-source/**",
   ]),
 ]);
 

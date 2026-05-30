@@ -178,11 +178,21 @@ export function useAnimationEngine(pattern: Pattern | null) {
     setPlaying(false);
     playingRef.current = false;
 
+    // Respect reduced-motion: render the first step statically and let the
+    // user opt into the animation rather than auto-playing it.
+    const prefersReduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     // small delay so diagram renders first
     const t = setTimeout(() => {
+      const tl = getTimeline(pattern, 0);
+      if (prefersReduced) {
+        applyStep(tl, 0);
+        return;
+      }
       playingRef.current = true;
       setPlaying(true);
-      const tl = getTimeline(pattern, 0);
       applyStep(tl, 0);
       scheduleNext(tl, 0);
     }, 100);

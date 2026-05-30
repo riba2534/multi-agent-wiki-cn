@@ -1,24 +1,36 @@
 import { expect, test } from '@playwright/test';
 
 test.describe('Multi-Agent Wiki', () => {
-  test('home page renders with sidebar nav', async ({ page }) => {
+  test('home cover renders the hero + category switcher', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('h1', { hasText: 'Multi-Agent Wiki' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Taxonomy' }).first()).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Decision Matrix' }).first()).toBeVisible();
+    // Full-bleed cover headline (no sidebar on the landing page anymore).
+    await expect(page.locator('h1', { hasText: '设计模式库' })).toBeVisible();
+    await expect(page.getByRole('link', { name: '从分类法开始' }).first()).toBeVisible();
+    // The category switcher (home animation) is present with its dimension tabs.
+    await expect(page.getByRole('heading', { name: /每个维度/ })).toBeVisible();
+    await expect(page.getByRole('tab', { name: /控制结构/ })).toBeVisible();
   });
 
-  test('navigating to taxonomy renders content', async ({ page }) => {
+  test('cover CTA navigates to taxonomy', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('link', { name: 'Taxonomy' }).first().click();
+    await page.getByRole('link', { name: '从分类法开始' }).first().click();
     await expect(page).toHaveURL(/\/taxonomy$/);
-    await expect(page.locator('h1', { hasText: /Taxonomy/ })).toBeVisible();
     await expect(page.locator('table').first()).toBeVisible();
+  });
+
+  test('home category switcher plays a pattern and swaps on tab change', async ({ page }) => {
+    await page.goto('/');
+    // The default (Control) tab embeds the same live visualization as pattern pages.
+    await expect(page.locator('.canvas-wrap svg.diagram .node').first()).toBeVisible();
+    await expect(page.locator('.controls button.primary')).toBeVisible();
+    // Switching to another dimension swaps the animated pattern in the canvas.
+    await page.getByRole('tab', { name: /决策/ }).click();
+    await expect(page.locator('.canvas-wrap svg.diagram .node').first()).toBeVisible();
   });
 
   test('pattern wiki page embeds the live visualization', async ({ page }) => {
     await page.goto('/patterns/supervisor-manager');
-    await expect(page.locator('h1', { hasText: /Supervisor/ })).toBeVisible();
+    await expect(page.locator('h1', { hasText: /监督者|管理者/ })).toBeVisible();
     // Live visualization widget mounted
     await expect(page.locator('.canvas-wrap svg.diagram')).toBeVisible();
     await expect(page.locator('.canvas-wrap svg.diagram .node').first()).toBeVisible();
@@ -34,23 +46,24 @@ test.describe('Multi-Agent Wiki', () => {
     }
   });
 
-  test('sidebar nav is grouped by category for patterns', async ({ page }) => {
-    await page.goto('/');
-    // Sub-category headers inside the Patterns section
-    await expect(page.locator('text=Control').first()).toBeVisible();
-    await expect(page.locator('text=Information').first()).toBeVisible();
-    await expect(page.locator('text=Decision').first()).toBeVisible();
+  test('sidebar nav is grouped by category on doc pages', async ({ page }) => {
+    // The sidebar lives on doc pages now — the home cover is full-bleed.
+    await page.goto('/taxonomy');
+    // Sub-category headers inside the Patterns section.
+    await expect(page.locator('text=CONTROL').first()).toBeVisible();
+    await expect(page.locator('text=INFORMATION').first()).toBeVisible();
+    await expect(page.locator('text=DECISION').first()).toBeVisible();
   });
 
   test('right-side TOC appears on wide viewports', async ({ page }) => {
     await page.setViewportSize({ width: 1500, height: 900 });
     await page.goto('/patterns/supervisor-manager');
-    await expect(page.locator('text=On this page')).toBeVisible();
+    await expect(page.locator('text=本页内容')).toBeVisible();
   });
 
   test('top nav theme toggle is reachable', async ({ page }) => {
     await page.goto('/');
-    const toggle = page.locator('button[aria-label="Toggle theme"]');
+    const toggle = page.locator('button[aria-label="切换主题"]');
     await expect(toggle).toBeVisible();
     await toggle.click();
   });
@@ -59,29 +72,28 @@ test.describe('Multi-Agent Wiki', () => {
     await page.goto('/patterns/debate-judge');
     const primary = page.locator('.controls button.primary');
     await expect(primary).toBeVisible();
-    const before = (await primary.innerText()).trim().toLowerCase();
+    const before = (await primary.innerText()).trim();
     await primary.click();
     await page.waitForTimeout(150);
-    const after = (await primary.innerText()).trim().toLowerCase();
+    const after = (await primary.innerText()).trim();
     expect(after).not.toEqual(before);
   });
 
   test('Patterns category label navigates to /patterns overview', async ({ page }) => {
-    await page.goto('/');
-    // The category header itself is a link to the overview, distinct from the
-    // chevron-toggle next to it.
-    await page.getByRole('link', { name: /Patterns/ }).first().click();
+    // The sidebar (with the Patterns overview link) is on doc pages now.
+    await page.goto('/taxonomy');
+    // The category header itself is a link to the overview (sidebar lives here).
+    await page.locator('aside a[href="/patterns"]').first().click();
     await expect(page).toHaveURL(/\/patterns$/);
-    await expect(page.locator('h1', { hasText: /Patterns Overview/ })).toBeVisible();
+    await expect(page.locator('h1', { hasText: /模式概览|Patterns/ })).toBeVisible();
   });
 
   test('sidebar scroll position is not reset to top on navigation', async ({ page }) => {
-    // The original bug: clicking any sidebar link slammed the sidebar's
-    // internal scroll back to 0. After the fix (sidebar lifted to the root
-    // layout + sessionStorage restore in useLayoutEffect), the scroll
-    // position is preserved across route changes.
+    // The original bug: clicking any sidebar link slammed the sidebar's internal
+    // scroll back to 0. The sidebar now lives in the (docs) layout; the
+    // sessionStorage restore in useLayoutEffect keeps scroll across navigation.
     await page.setViewportSize({ width: 1400, height: 800 });
-    await page.goto('/');
+    await page.goto('/taxonomy');
     const sidebar = page.locator('aside .sticky').first();
     await expect(sidebar).toBeVisible();
 
@@ -91,14 +103,11 @@ test.describe('Multi-Agent Wiki', () => {
 
     // Click a sidebar link — the click handler captures scroll into
     // sessionStorage; the useLayoutEffect on the new pathname restores it.
-    await page.getByRole('link', { name: 'MARL / CTDE' }).first().click();
+    await page.getByRole('link', { name: /MARL \/ CTDE/ }).first().click();
     await expect(page).toHaveURL(/marl-ctde/);
     await page.waitForTimeout(300);
 
     const after = await sidebar.evaluate(el => el.scrollTop);
-    // The original bug landed at scrollTop=0. The fix keeps the scroll well
-    // away from the top. Exact value depends on whether the active item was
-    // scrolled into view by the click, so just assert "not at the top".
     expect(after).toBeGreaterThan(100);
   });
 
@@ -114,7 +123,7 @@ test.describe('Multi-Agent Wiki', () => {
     const ogTitle = await page.locator('meta[property="og:title"]').first().getAttribute('content');
     const ogImage = await page.locator('meta[property="og:image"]').first().getAttribute('content');
     const twCard = await page.locator('meta[name="twitter:card"]').first().getAttribute('content');
-    expect(ogTitle).toContain('Multi-Agent Wiki');
+    expect(ogTitle).toContain('多智能体 Wiki');
     expect(ogImage).toMatch(/opengraph-image/);
     expect(twCard).toBe('summary_large_image');
   });
@@ -123,26 +132,27 @@ test.describe('Multi-Agent Wiki', () => {
     await page.goto('/implementation/observability');
     // TS code block has a "TypeScript" header label and a copy button.
     await expect(page.locator('text=TypeScript').first()).toBeVisible();
-    await expect(page.locator('button[aria-label="Copy code"]').first()).toBeVisible();
+    await expect(page.locator('button[aria-label="复制代码"]').first()).toBeVisible();
   });
 
-  test('bare flowchart fences render as mermaid diagrams', async ({ page }) => {
-    // /taxonomy renders the global taxonomy mermaid; verify it became an SVG.
-    await page.goto('/taxonomy');
-    await expect(page.locator('svg').first()).toBeVisible();
+  test('flowchart fences render as interactive diagrams', async ({ page }) => {
+    // index.md's global-taxonomy flowchart fence renders into a React Flow
+    // diagram in the home overview section.
+    await page.goto('/');
+    await expect(page.locator('.react-flow').first()).toBeVisible();
+    await expect(page.locator('.react-flow__node').first()).toBeVisible();
   });
 
   test('diagrams render via React Flow with fullscreen viewer', async ({ page }) => {
     await page.goto('/implementation/production-runtime');
     // React Flow takes over for parseable mermaid → look for the RF root.
     await expect(page.locator('.react-flow').first()).toBeVisible();
-    // Animated edges + custom nodes mean there is at least one Handle and edge path.
     await expect(page.locator('.react-flow__node').first()).toBeVisible();
     // Fullscreen viewer
-    await page.locator('button[aria-label="Open diagram fullscreen"]').first().click({ force: true });
-    await expect(page.locator('text=Diagram viewer')).toBeVisible();
+    await page.locator('button[aria-label="全屏查看图表"]').first().click({ force: true });
+    await expect(page.locator('text=图表查看器')).toBeVisible();
     await page.keyboard.press('Escape');
-    await expect(page.locator('text=Diagram viewer')).not.toBeVisible();
+    await expect(page.locator('text=图表查看器')).not.toBeVisible();
   });
 
   test('llms.txt endpoint is served', async ({ page }) => {
@@ -150,6 +160,6 @@ test.describe('Multi-Agent Wiki', () => {
     expect(res?.status()).toBe(200);
     expect(res?.headers()['content-type']).toContain('text/plain');
     const body = await page.content();
-    expect(body).toContain('Multi-Agent Wiki');
+    expect(body).toMatch(/Wiki/i);
   });
 });

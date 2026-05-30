@@ -57,7 +57,7 @@ export function AnimatedPattern({ patternId }: Props) {
           Live · 实时可视化
         </span>
         <span className="text-[12px] text-muted-foreground">
-          动态拓扑 — 按 <kbd className="rounded-md border border-border/60 bg-muted/60 px-1.5 py-0.5 font-mono text-[10px] shadow-sm">Space</kbd> 播放 / 暂停
+          动态拓扑<span className="hidden sm:inline"> — 按 <kbd className="rounded-md border border-border/60 bg-muted/60 px-1.5 py-0.5 font-mono text-[10px] shadow-sm">Space</kbd> 播放 / 暂停</span>
         </span>
       </header>
 

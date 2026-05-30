@@ -16,7 +16,7 @@ import {
   ReactFlowProvider,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { Maximize2 } from 'lucide-react';
+import { Maximize2, X } from 'lucide-react';
 import { parseFlowchart, type FlowDirection, type ParsedFlow, type NodeShape } from '@/lib/mermaid-parser';
 import { cn } from '@/lib/utils';
 
@@ -183,7 +183,12 @@ function Inner({ flow, height = 480 }: { flow: ParsedFlow; height?: number }) {
 export function FlowDiagram({ chart, fallback, height = 480 }: Props) {
   const flow = useMemo(() => parseFlowchart(chart), [chart]);
   const [open, setOpen] = useState(false);
+  // React Flow measures the DOM and renders non-deterministically, so it can't
+  // be server-rendered without a hydration mismatch. Render a stable skeleton
+  // for SSR + the first client paint, then mount the live diagram.
+  const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => setMounted(true), []);
 
   if (!flow) return fallback ?? null;
 
@@ -194,21 +199,31 @@ export function FlowDiagram({ chart, fallback, height = 480 }: Props) {
         className="group relative my-4 overflow-hidden rounded-2xl border border-border/40 bg-gradient-to-br from-muted/30 via-background to-muted/10 shadow-lg shadow-brand/5 ring-1 ring-inset ring-white/5 dark:ring-white/[0.02]"
         style={{ height }}
       >
-        <ReactFlowProvider>
-          <Inner flow={flow} height={height} />
-        </ReactFlowProvider>
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          aria-label="全屏查看图表"
-          title="全屏查看"
-          className="absolute right-3 top-3 z-10 inline-flex size-8 items-center justify-center rounded-lg bg-background/70 text-muted-foreground opacity-0 shadow-md backdrop-blur-xl transition-all duration-200 hover:bg-background hover:text-brand hover:shadow-lg group-hover:opacity-100"
-        >
-          <Maximize2 className="size-3.5" />
-        </button>
+        {mounted ? (
+          <>
+            <ReactFlowProvider>
+              <Inner flow={flow} height={height} />
+            </ReactFlowProvider>
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              aria-label="全屏查看图表"
+              title="全屏查看"
+              className="absolute right-3 top-3 z-10 inline-flex size-8 items-center justify-center rounded-lg bg-background/70 text-muted-foreground opacity-0 shadow-md backdrop-blur-xl transition-all duration-200 hover:bg-background hover:text-brand hover:shadow-lg group-hover:opacity-100"
+            >
+              <Maximize2 className="size-3.5" />
+            </button>
+          </>
+        ) : (
+          <div className="flex size-full items-center justify-center bg-muted/20">
+            <span className="animate-pulse font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground/50">
+              加载图表…
+            </span>
+          </div>
+        )}
       </div>
 
-      {open && <FullscreenFlow flow={flow} onClose={() => setOpen(false)} />}
+      {open && mounted && <FullscreenFlow flow={flow} onClose={() => setOpen(false)} />}
     </>
   );
 }
@@ -241,7 +256,7 @@ function FullscreenFlow({ flow, onClose }: { flow: ParsedFlow; onClose: () => vo
           aria-label="关闭 (Esc)"
           className="inline-flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-all hover:bg-accent hover:text-foreground hover:shadow-sm"
         >
-          ✕
+          <X className="size-4" />
         </button>
       </div>
       <div className="relative flex-1">

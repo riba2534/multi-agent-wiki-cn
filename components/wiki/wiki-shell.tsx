@@ -6,6 +6,8 @@ import type { NavLeaf } from '@/lib/wiki-nav';
 import type { Heading } from '@/lib/markdown-utils';
 import { Markdown } from './markdown';
 import { Toc } from './toc';
+import { ReadingProgress } from './reading-progress';
+import { BackToTop } from './back-to-top';
 import { cn } from '@/lib/utils';
 import { CATEGORY_TONE, type PatternCategory } from '@/lib/pattern-map';
 
@@ -33,6 +35,8 @@ export function WikiShell({
 }: Props) {
   return (
     <>
+      <ReadingProgress />
+      <BackToTop />
       <main className="min-w-0 flex-1 py-10 lg:pl-12 lg:pr-10">
         <motion.div
           key={slug.join('/') || 'home'}
@@ -69,7 +73,7 @@ export function WikiShell({
                 {category}
               </span>
             )}
-            <h1 className="mt-3 text-[2.125rem] font-bold leading-tight tracking-tight text-foreground sm:text-4xl">
+            <h1 className="mt-3 text-[2.375rem] font-bold leading-[1.1] tracking-tight text-foreground sm:text-[2.75rem]">
               {title}
             </h1>
             {description && (
