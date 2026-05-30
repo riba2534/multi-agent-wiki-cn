@@ -9,20 +9,20 @@ description: 多层管理者-执行者体系——上层分解任务，下层执
 
 一种多层管理者-执行者结构。上层负责规划与分解；下层负责执行，并可自行进一步分解。
 
-**分类**：控制结构
+**类别**：控制结构
 
 ## 结构
 
 ```mermaid
 flowchart TD
-  M0[顶层管理者] --> M1[前端管理者]
-  M0 --> M2[后端管理者]
-  M0 --> M3[QA 管理者]
+  M0["顶层管理者"] --> M1["前端管理者"]
+  M0 --> M2["后端管理者"]
+  M0 --> M3["QA 管理者"]
   M1 --> A1[UI Agent]
-  M1 --> A2[样式 Agent]
+  M1 --> A2["样式 Agent"]
   M2 --> A3[API Agent]
   M2 --> A4[DB Agent]
-  M3 --> A5[测试 Agent]
+  M3 --> A5["测试 Agent"]
 ```
 
 ## 适用场景
@@ -51,7 +51,7 @@ async function decompose(node: TaskNode, depth = 0) {
 }
 ```
 
-## 推荐 trace 事件
+## 推荐的追踪事件
 
 - `hierarchy.node.created`
 - `hierarchy.node.assigned`
@@ -62,18 +62,18 @@ async function decompose(node: TaskNode, depth = 0) {
 
 - 层级过深导致高延迟。
 - 顶层计划出错会波及所有下层分支。
-- 执行者 failures 被管理者的摘要掩盖。
+- 执行者的失败被管理者的摘要掩盖。
 
-## 实现 checklist
+## 实现检查清单
 
 - [ ] 输入/输出 schema 已定义。
-- [ ] 每个 agent 的权限边界已定义。
-- [ ] 每次 agent 调用都携带 run id / trace id。
+- [ ] 每个 Agent 的权限边界已定义。
+- [ ] 每次 Agent 调用都携带 run id / trace id。
 - [ ] 失败、超时、取消和重试策略已定义。
 - [ ] 传递的上下文为所需最小量，而非完整历史。
-- [ ] 高风险操作设有审批或验证者把关。
+- [ ] 高风险操作设有审批或验证器把关。
 
-## 参考文献
+## 参考资料
 
 - [Google ADK patterns](https://developers.googleblog.com/developers-guide-to-multi-agent-patterns-in-adk/)
 - [Survey of communication](https://arxiv.org/html/2502.14321v2)

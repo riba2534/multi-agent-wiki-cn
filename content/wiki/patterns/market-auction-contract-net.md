@@ -30,7 +30,7 @@ sequenceDiagram
 
 ## 适用场景
 
-资源调度、工具成本优化、机器人任务分配、多 agent 负载均衡。
+资源调度、工具成本优化、机器人任务分配、多 Agent 负载均衡。
 
 ## 不适用场景
 
@@ -41,9 +41,9 @@ sequenceDiagram
 1. 管理者发布任务公告，包含目标、约束条件、预算和验收标准。
 2. Agent 返回投标信息：成本、预计完成时间、置信度、所需权限。
 3. 管理者通过评分函数选择中标者。
-4. 任务完成后更新 agent 信誉——防止长期低报。
+4. 任务完成后更新 Agent 信誉——防止长期低报。
 
-## 最小伪代码
+## 最小化伪代码
 
 ```ts
 const bids = await Promise.all(agents.map(a => a.bid(task)));
@@ -68,12 +68,13 @@ reputation.update(winner.agent, result);
 ## 实现检查清单
 
 - [ ] 输入/输出 schema 已定义。
-- [ ] 每个 agent 的权限边界已定义。
-- [ ] 每个 agent 调用携带 run id / trace id。
+- [ ] 每个 Agent 的权限边界已定义。
+- [ ] 每个 Agent 调用携带 run id / trace id。
 - [ ] 失败、超时、取消和重试策略已定义。
 - [ ] 传递的上下文为最小必要信息，而非完整历史。
 - [ ] 高风险操作需经过审批或验证器把关。
 
-## 参考文献
+## 参考资料
 
-- [Survey of communication](https://arxiv.org/html/2502.14321v2)
+- [Smith, R.G. (1980) — The Contract Net Protocol 原始论文](https://doi.org/10.1109/TC.1980.1675516)
+- [Beyond Self-Talk: A Communication-Centric Survey of LLM-Based Multi-Agent Systems (Yan et al., 2025)](https://arxiv.org/html/2502.14321v2)

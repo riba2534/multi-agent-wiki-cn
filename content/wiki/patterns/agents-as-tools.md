@@ -15,9 +15,9 @@ description: 将专家 Agent 封装为工具；主 Agent 保持对话控制权�
 
 ```mermaid
 flowchart LR
-  U[用户] --> M[主 Agent]
-  M -->|工具调用| T1[搜索 Agent 工具]
-  M -->|工具调用| T2[代码审查 Agent 工具]
+  U["用户"] --> M["主 Agent"]
+  M -->|"工具调用"| T1["搜索 Agent 工具"]
+  M -->|"工具调用"| T2["代码审查 Agent 工具"]
   T1 --> M
   T2 --> M
   M --> U
@@ -55,11 +55,11 @@ const mainAgent = new Agent({
 });
 ```
 
-## 推荐追踪事件
+## 推荐的追踪事件
 
-- `tool.agent.invoked`
-- `tool.agent.output`
-- `tool.agent.error`
+- `tool.Agent.invoked`
+- `tool.Agent.output`
+- `tool.Agent.error`
 
 ## 常见失败模式
 
@@ -74,9 +74,9 @@ const mainAgent = new Agent({
 - [ ] 每次 Agent 调用均携带 run id / trace id。
 - [ ] 失败、超时、取消和重试策略已定义。
 - [ ] 传递的上下文为最小必要内容，而非完整历史。
-- [ ] 高风险操作需要审批或验证者把关。
+- [ ] 高风险操作需要审批或验证器把关。
 
 ## 参考资料
 
-- [OpenAI 工具](https://openai.github.io/openai-agents-python/tools/)
+- [OpenAI 工具](https://openai.github.io/openai-Agent-python/tools/)
 - [LangChain 多 Agent](https://docs.langchain.com/oss/python/langchain/multi-agent)

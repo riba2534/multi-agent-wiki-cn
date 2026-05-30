@@ -1,13 +1,13 @@
 ---
 title: 投票 / 集成
-description: 多个 agent 独立产出候选答案；通过投票、评分或验证器选出最终结果。
+description: 多个 Agent 独立产出候选答案；通过投票、评分或验证器选出最终结果。
 ---
 
 # 投票 / 集成
 
 ## 定义
 
-多个 agent 独立产出候选答案；通过投票、排名、评分或验证器选出最终结果。
+多个 Agent 独立产出候选答案；通过投票、排名、评分或验证器选出最终结果。
 
 **类别**：决策
 
@@ -15,13 +15,13 @@ description: 多个 agent 独立产出候选答案；通过投票、评分或验
 
 ```mermaid
 flowchart TD
-  Q[问题] --> A[Agent A]
+  Q["问题"] --> A[Agent A]
   Q --> B[Agent B]
   Q --> C[Agent C]
-  A --> V[投票器 / 排序器]
+  A --> V["投票器 / 排序器"]
   B --> V
   C --> V
-  V --> R[最终答案]
+  V --> R["最终答案"]
 ```
 
 ## 适用场景
@@ -30,7 +30,7 @@ flowchart TD
 
 ## 不适用场景
 
-候选答案高度相关、所有 agent 共享相同错误来源，或任务需要工具验证而非投票时。
+候选答案高度相关、所有 Agent 共享相同错误来源，或任务需要工具验证而非投票时。
 
 ## 实现方法
 
@@ -39,13 +39,18 @@ flowchart TD
 3. 排序器依据评分标准评判，而非"看起来哪个最好"。
 4. 对于可执行任务，用工具验证获胜候选。
 
-## 最小伪代码
+## 最小化伪代码
 
 ```ts
-const candidates = await Promise.all(agents.map(a => a.answer(question)));
-const scored = await ranker.score({ question, candidates, rubric });
-const winner = scored.sort((a, b) => b.score - a.score)[0];
-return verifier ? verifier.check(winner) : winner;
+async function voteAndSelect(agents, question, ranker, rubric, verifier?) {
+  const results = await Promise.allSettled(agents.map(a => a.answer(question)));
+  const candidates = results
+    .filter(r => r.status === "fulfilled")
+    .map(r => r.value);
+  const scored = await ranker.score({ question, candidates, rubric });
+  const winner = [...scored].sort((a, b) => b.score - a.score)[0];
+  return verifier ? verifier.check(winner) : winner;
+}
 ```
 
 ## 推荐的追踪事件
@@ -69,7 +74,8 @@ return verifier ? verifier.check(winner) : winner;
 - [ ] 追踪事件已定义。
 - [ ] 降级或人工接管策略已定义。
 
-## 参考文献
+## 参考资料
 
 - [Survey: LLM-based multi-agent](https://arxiv.org/html/2412.17481v2)
 - [Mixture-of-Agents (MoA)](https://arxiv.org/abs/2406.04692)
+- [Self-Consistency Improves Chain of Thought Reasoning in Language Models (Wang et al., ICLR 2023)](https://arxiv.org/abs/2203.11171)

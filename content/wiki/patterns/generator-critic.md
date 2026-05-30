@@ -1,25 +1,25 @@
 ---
-title: 生成器-评审者 / 验证者
-description: 一个Agent负责生成；另一个负责评审、验证、评分或提出修改建议。
+title: 生成器-评审者 / 验证器
+description: 一个 Agent 负责生成；另一个负责评审、验证、评分或提出修改建议。
 ---
 
-# 生成器-评审者 / 验证者
+# 生成器-评审者 / 验证器
 
 ## 定义
 
-一个Agent负责生成；另一个负责评审、验证、评分或提出修订建议。
+一个 Agent 负责生成；另一个负责评审、验证、评分或提出修订建议。
 
-**分类**：决策
+**类别**：决策
 
 ## 结构
 
 ```mermaid
 flowchart LR
-  T[任务] --> G[生成器]
-  G --> O[草稿]
-  O --> C[评审者 / 验证者]
-  C -->|反馈| G
-  C -->|通过| R[已接受的输出]
+  T["任务"] --> G["生成器"]
+  G --> O["草稿"]
+  O --> C["评审者 / 验证器"]
+  C -->|"反馈"| G
+  C -->|"通过"| R["已接受的输出"]
 ```
 
 ## 适用场景
@@ -37,7 +37,7 @@ flowchart LR
 3. 对于代码类任务，评审者应尽可能运行测试、lint检查和diff对比。
 4. 生成器根据反馈进行修订，最多迭代N次。
 
-## 最简伪代码
+## 最小化伪代码
 
 ```ts
 let draft = await generator.run(task);
@@ -65,13 +65,15 @@ return { draft, warning: "max iterations reached" };
 ## 实现检查清单
 
 - [ ] 输入/输出schema已定义。
-- [ ] 每个Agent的权限边界已定义。
-- [ ] 每次Agent调用都携带 run id / trace id。
+- [ ] 每个 Agent 的权限边界已定义。
+- [ ] 每次 Agent 调用都携带 run id / trace id。
 - [ ] 失败、超时、取消和重试策略已定义。
 - [ ] 传递的上下文为最小必要信息，而非完整历史记录。
-- [ ] 高风险操作由审批或验证者把关。
+- [ ] 高风险操作由审批或验证器把关。
 
-## 参考文献
+## 参考资料
 
 - [Google ADK patterns](https://developers.googleblog.com/developers-guide-to-multi-agent-patterns-in-adk/)
 - [Google architecture patterns](https://docs.cloud.google.com/architecture/choose-design-pattern-agentic-ai-system)
+- [Constitutional AI: Harmlessness from AI Feedback (Bai et al., 2022)](https://arxiv.org/abs/2212.08073)
+- [Reflexion: Language Agents with Verbal Reinforcement Learning (Shinn et al., NeurIPS 2023)](https://arxiv.org/abs/2303.11366)

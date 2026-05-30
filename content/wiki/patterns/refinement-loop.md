@@ -15,11 +15,11 @@ description: 生成 → 评估 → 修正，直到满足退出条件或达到预
 
 ```mermaid
 flowchart TD
-  A[生成] --> B[评估]
-  B -->|通过| C[返回结果]
-  B -->|未通过| D[反馈]
+  A["生成"] --> B["评估"]
+  B -->|"通过"| C["返回结果"]
+  B -->|"未通过"| D["反馈"]
   D --> A
-  B -->|预算耗尽| E[返回结果并附警告]
+  B -->|"预算耗尽"| E["返回结果并附警告"]
 ```
 
 ## 适用场景
@@ -37,7 +37,7 @@ flowchart TD
 3. 记录每轮的差异、评分、反馈和成本。
 4. 达到最大轮次时，返回当前状态和未解决问题。
 
-## 最小伪代码
+## 最小化伪代码
 
 ```ts
 for (let round = 1; round <= maxRounds; round++) {
@@ -66,13 +66,15 @@ return { status: "incomplete", state };
 ## 实现检查清单
 
 - [ ] 输入/输出 schema 已定义。
-- [ ] 每个 agent 的权限边界已定义。
-- [ ] 每个 agent 调用携带 run id / trace id。
+- [ ] 每个 Agent 的权限边界已定义。
+- [ ] 每个 Agent 调用携带 run id / trace id。
 - [ ] 失败、超时、取消和重试策略已定义。
 - [ ] 传递的上下文为最小必要信息，而非完整历史。
 - [ ] 高风险操作需经过审批或验证器把关。
 
-## 参考文献
+## 参考资料
 
 - [Google ADK patterns](https://developers.googleblog.com/developers-guide-to-multi-agent-patterns-in-adk/)
 - [Google architecture patterns](https://docs.cloud.google.com/architecture/choose-design-pattern-agentic-ai-system)
+- [Reflexion: Language Agents with Verbal Reinforcement Learning (Shinn et al., NeurIPS 2023)](https://arxiv.org/abs/2303.11366)
+- [Self-Refine: Iterative Refinement with Self-Feedback (Madaan et al., 2023)](https://arxiv.org/abs/2303.17651)

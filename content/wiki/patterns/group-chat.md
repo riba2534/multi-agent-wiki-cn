@@ -1,13 +1,13 @@
 ---
 title: 群聊 / 会议
-description: 多个 agent 共享一个线程；由主持人或选择器决定谁下一个发言。
+description: 多个 Agent 共享一个线程；由主持人或选择器决定谁下一个发言。
 ---
 
 # 群聊 / 会议
 
 ## 定义
 
-多个 agent 共享单个消息线程或主题。由规则、LLM 选择器或人类主持人决定谁下一个发言。
+多个 Agent 共享单个消息线程或主题。由规则、LLM 选择器或人类主持人决定谁下一个发言。
 
 **类别**：信息流
 
@@ -15,11 +15,11 @@ description: 多个 agent 共享一个线程；由主持人或选择器决定谁
 
 ```mermaid
 flowchart TD
-  Topic[共享主题 / 线程] --> Writer[写作者]
-  Topic --> Reviewer[审查者]
-  Topic --> Planner[规划者]
-  Topic --> UserProxy[用户代理]
-  Moderator[主持人] --> Topic
+  Topic["共享主题 / 线程"] --> Writer["写作者"]
+  Topic --> Reviewer["审查者"]
+  Topic --> Planner["规划者"]
+  Topic --> UserProxy["用户代理"]
+  Moderator["主持人"] --> Topic
   Writer --> Topic
   Reviewer --> Topic
   Planner --> Topic
@@ -40,7 +40,7 @@ flowchart TD
 3. 仅在共享线程中保留必要信息；修剪离题消息。
 4. 定期总结线程以控制 token 用量。
 
-## 最小伪代码
+## 最小化伪代码
 
 ```ts
 while (!termination(thread)) {
@@ -51,7 +51,7 @@ while (!termination(thread)) {
 return summarizer.run(thread);
 ```
 
-## 推荐追踪事件
+## 推荐的追踪事件
 
 - `groupchat.speaker.selected`
 - `groupchat.message.appended`
@@ -62,19 +62,19 @@ return summarizer.run(thread);
 
 - 对话偏离主题。
 - Token 成本快速增长。
-- 弱势 agent 被强势者裹挟。
+- 弱势 Agent 被强势者裹挟。
 - 未产生具体产出物。
 
-## 实现清单
+## 实现检查清单
 
 - [ ] 已定义输入/输出 schema。
-- [ ] 已定义每个 agent 的权限边界。
-- [ ] 每个 agent 调用携带 run id / trace id。
+- [ ] 已定义每个 Agent 的权限边界。
+- [ ] 每个 Agent 调用携带 run id / trace id。
 - [ ] 已定义失败、超时、取消和重试策略。
 - [ ] 传递的上下文为所需最小集，而非完整历史。
-- [ ] 高风险操作由审批或验证者把关。
+- [ ] 高风险操作由审批或验证器把关。
 
-## 参考文献
+## 参考资料
 
 - [AutoGen 模式](https://microsoft.github.io/autogen/0.2/docs/tutorial/conversation-patterns/)
 - [AutoGen 群聊](https://microsoft.github.io/autogen/stable/user-guide/core-user-guide/design-patterns/group-chat.html)

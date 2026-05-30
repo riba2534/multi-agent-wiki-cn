@@ -48,18 +48,23 @@ sequenceDiagram
 async function maybeHandoff(state: SessionState) {
   const decision = await router.classify(state.lastMessage, state.activeAgent);
   if (decision.type === "handoff") {
-    assert(!state.handoffHistory.includesLoop(decision.to));
-    return {
+    if (hasLoop(state.handoffHistory, decision.to)) {
+      throw new HandoffLoopError(state.handoffHistory, decision.to);
+    }
+    const newState = {
       ...state,
       activeAgent: decision.to,
       handoffHistory: [...state.handoffHistory, decision]
     };
+    // 实际调用目标 Agent 开始处理
+    const result = await agentRegistry.get(decision.to).run(state.lastMessage, newState);
+    return { ...newState, lastResult: result };
   }
   return state;
 }
 ```
 
-## 推荐追踪事件
+## 推荐的追踪事件
 
 - `handoff.requested`
 - `handoff.accepted`
@@ -80,9 +85,9 @@ async function maybeHandoff(state: SessionState) {
 - [ ] 每次 Agent 调用均携带 run id / trace id。
 - [ ] 失败、超时、取消和重试策略已定义。
 - [ ] 传递的上下文为最小必要内容，而非完整历史。
-- [ ] 高风险操作需要审批或验证者把关。
+- [ ] 高风险操作需要审批或验证器把关。
 
 ## 参考资料
 
-- [OpenAI 交接](https://openai.github.io/openai-agents-python/handoffs/)
+- [OpenAI 交接](https://openai.github.io/openai-Agent-python/handoffs/)
 - [LangChain 交接](https://docs.langchain.com/oss/python/langchain/multi-agent/handoffs)

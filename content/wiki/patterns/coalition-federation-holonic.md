@@ -1,39 +1,39 @@
 ---
-title: 联盟 / 联邦 / 合弄制组织
+title: 联盟 / 联邦 / 合弄组织
 description: Agent 围绕任务形成临时联盟、团队、联邦或合弄。
 ---
 
-# 联盟 / 联邦 / 合弄制组织
+# 联盟 / 联邦 / 合弄组织
 
 ## 定义
 
-多个 agent 围绕任务临时形成联盟、团队、联邦或合弄。关注点是治理、成员资格和自治边界——而非单次调用流程。
+多个 Agent 围绕任务临时形成联盟、团队、联邦或合弄。关注点是治理、成员资格和自治边界——而非单次调用流程。
 
-**分类**：组织
+**类别**：组织
 
 ## 结构
 
 ```mermaid
 flowchart TD
-  Org[Agent 组织] --> C1[联盟 A]
-  Org --> C2[联邦 B]
-  Org --> H[合弄]
+  Org["Agent 组织"] --> C1["联盟 A"]
+  Org --> C2["联邦 B"]
+  Org --> H["合弄"]
   C1 --> A1[Agent 1]
   C1 --> A2[Agent 2]
   C2 --> A3[Agent 3]
   C2 --> A4[Agent 4]
-  H --> Sub[子合弄 / 团队]
+  H --> Sub["子合弄 / 团队"]
 ```
 
 ## 适用场景
 
-跨团队协作、开放 agent 网络、多组织任务、互联的内部 agent 平台。
+跨团队协作、开放 Agent 网络、多组织任务、互联的内部 Agent 平台。
 
 ## 不适用场景
 
 小型固定流程；无动态团队组建需求；简单的权限边界。
 
-## 如何实现
+## 实现方法
 
 1. 定义组织注册表：组织、成员、能力、信任级别。
 2. 定义加入、退出、授权和撤销的规则。
@@ -69,7 +69,7 @@ function formCoalition(task, candidates) {
 - 联盟目标与个体目标冲突。
 - 组织状态从未被清理。
 
-## 实施清单
+## 实现检查清单
 
 - [ ] 触发和退出条件已定义。
 - [ ] 输入/输出 schema 已定义。
@@ -79,4 +79,4 @@ function formCoalition(task, candidates) {
 
 ## 参考资料
 
-- [多 agent 系统中的组织范式](https://dl.acm.org/doi/abs/10.1017/s0269888905000317)
+- [多 Agent 系统中的组织范式综述 (Horling & Lesser, 2004)](https://www.cambridge.org/core/journals/knowledge-engineering-review/article/abs/survey-of-multiagent-organizational-paradigms/S0269888905000317)

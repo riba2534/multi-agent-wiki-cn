@@ -1,13 +1,13 @@
 ---
 title: 混合代理 / 分层集成
-description: 多个模型或 agent 分层堆叠；每一层读取多个前序输出并加以改进。
+description: 多个模型或 Agent 分层堆叠；每一层读取多个前序输出并加以改进。
 ---
 
 # 混合代理 / 分层集成
 
 ## 定义
 
-多个模型或 agent 分层生成输出；每后续层读取前一层多个输出并加以改进。
+多个模型或 Agent 分层生成输出；每后续层读取前一层多个输出并加以改进。
 
 **类别**：决策
 
@@ -15,18 +15,18 @@ description: 多个模型或 agent 分层堆叠；每一层读取多个前序输
 
 ```mermaid
 flowchart TD
-  Q[提示词] --> A1[第1层 Agent A]
-  Q --> A2[第1层 Agent B]
-  Q --> A3[第1层 Agent C]
-  A1 --> B1[第2层 Agent A]
+  Q["提示词"] --> A1["第1层 Agent A"]
+  Q --> A2["第1层 Agent B"]
+  Q --> A3["第1层 Agent C"]
+  A1 --> B1["第2层 Agent A"]
   A2 --> B1
   A3 --> B1
-  A1 --> B2[第2层 Agent B]
+  A1 --> B2["第2层 Agent B"]
   A2 --> B2
   A3 --> B2
-  B1 --> S[聚合器]
+  B1 --> S["聚合器"]
   B2 --> S
-  S --> R[最终结果]
+  S --> R["最终结果"]
 ```
 
 ## 适用场景
@@ -44,7 +44,7 @@ flowchart TD
 3. 聚合器负责去重、冲突解决和质量排序。
 4. 限制层数——通常 2 到 3 层足够。
 
-## 最小伪代码
+## 最小化伪代码
 
 ```ts
 let layerOutputs = await Promise.all(layer1.map(a => a.run(prompt)));
@@ -70,12 +70,13 @@ return aggregator.run({ prompt, candidates: layerOutputs });
 ## 实现检查清单
 
 - [ ] 输入/输出 schema 已定义。
-- [ ] 每个 agent 的权限边界已定义。
-- [ ] 每个 agent 调用携带 run id / trace id。
+- [ ] 每个 Agent 的权限边界已定义。
+- [ ] 每个 Agent 调用携带 run id / trace id。
 - [ ] 失败、超时、取消和重试策略已定义。
 - [ ] 传递的上下文为最小必要信息，而非完整历史。
 - [ ] 高风险操作需经过审批或验证器把关。
 
-## 参考文献
+## 参考资料
 
-- [Mixture-of-Agents (MoA)](https://arxiv.org/abs/2406.04692)
+- [Mixture-of-Agents Enhances Large Language Model Capabilities (Wang et al., 2024)](https://arxiv.org/abs/2406.04692)
+- [Self-Consistency Improves Chain of Thought Reasoning in Language Models (Wang et al., ICLR 2023)](https://arxiv.org/abs/2203.11171)
